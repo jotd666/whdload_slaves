@@ -88,20 +88,8 @@ IGNORE_JOY_DIRECTIONS
 ;============================================================================
 
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-
 DECL_VERSION:MACRO
-	dc.b	"2.2"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
-	IFD	DATETIME
-		dc.b	" "
-		incbin	datetime
-	ENDC
+	dc.b	"2.2 (22.10.2026)"
 	ENDM
 	dc.b	"$","VER: slave "
 	DECL_VERSION
@@ -128,7 +116,7 @@ slv_name		dc.b	"TFX"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1995-1997 Digital Image Design",0
-slv_info		dc.b	"adapted by JOTD & paraj",10,10
+slv_info		dc.b	"adapted by JOTD, paraj & Vesuri",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -233,11 +221,7 @@ _bootdos
         move.l  executable(pc),d1
         bne   .noauto
     ;automatic mode
-        CHECK_NO_FAST_ALLOC
-        ; In "fast" mode, the plain 020 version is preferable. It has more features, and
-        ; even on 060 TFX.040 (the other candidate) is only marginally faster.
-        beq     .nofpu
-
+        ; Use the 1997 build with an FPU, plain TFX without one.
         move.l  attnflags(pc),d0
         btst    #AFB_68040,d0
         beq   .test_fpu
@@ -259,8 +243,7 @@ _bootdos
         bra.b   .assume_fpu
 .plain_040
         ; 68040. Check if we have FPU available
-      ; check for 040 FPU, fails on 68060 atm there's no
-      ; way to make 060 run a FPU version anyway
+        ; The 060 has already been checked through PCR above.
         btst    #AFB_FPU40,d0
         beq.b   .nofpu
         ; 68040/060 with FPU, we can automatically select one of the FPU
@@ -443,6 +426,8 @@ timer_name:
         even
 
 get_version
+        lea render_patchlist(pc),a0
+        clr.l (a0)
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
         
@@ -493,8 +478,21 @@ get_version
 .vfpu_new
     ; this version needs patching (data/bss hunks)
 
+        lea pl_fpu_new_render(pc),a3
+        btst.b #AFB_68040,attnflags+3(pc)
+        beq.b .new_render_list
+        btst.b #AFB_68060,attnflags+3(pc)
+        bne.b .new_render_list
+        lea pl_fpu_new_render_040(pc),a3
+.new_render_list:
+        lea render_patchlist(pc),a0
+        move.l a3,(a0)
         lea pl_fpu_new(pc),a0
+        lea native_fpu_patches(pc),a1
+        btst.b #AFB_68060,attnflags+3(pc)
+        beq.b .new_fpu_list
         lea pl_fpu_new_040(pc),a1
+.new_fpu_list:
         lea pl_fpu_new_060(pc),a2
         move.w  #13574,d0
         rts
@@ -505,6 +503,21 @@ new_AllocMem
     cmp.l   #$000182C8,d0
     bne.b   .no_dataseg
 .chip
+    IFD CHIP_ONLY
+    ELSE
+    ; All CPUs use the DMA-only chip layout with the new renderer.
+    ; Original rendering retains the executable's chip data/BSS.
+    CHECK_NO_FAST_ALLOC
+    bne.b   .keepchip
+    and.w   #~MEMF_CHIP,d1
+    or.w    #MEMF_FAST,d1
+    movem.l a0,-(sp)
+    lea     new_fast_data(pc),a0
+    st.b    (a0)
+    movem.l (sp)+,a0
+    bra.b   .no_dataseg
+.keepchip
+    ENDC
     or.w    #MEMF_CHIP,d1   ; wrong hunk, fix it
 .no_dataseg
     move.l  old_AllocMem(pc),-(a7)
@@ -563,10 +576,19 @@ patch_main
 
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+        bsr     split_new_chip_data
+
         move.l  d7,a1
         move.l  _resload(pc),a2
         jsr	resload_PatchSeg(a2)
 
+        ; Apply the CPU-specific render list after the shared list.
+        move.l  render_patchlist(pc),d0
+        beq.b   .no_render_patches
+        move.l  d0,a0
+        move.l  d7,a1
+        jsr     resload_PatchSeg(a2)
+.no_render_patches:
         move.l  fpu_patchlist(pc),d0
         beq.b   .no_fpu_patches
         move.l  d0,a0
@@ -596,6 +618,22 @@ patch_main
 
         CHECK_NO_FAST_ALLOC
         bne     .not020v
+
+        ; Fast shadows of both chip screen buffers: do_swap_screen then copies
+        ; only changed blocks. Not on the 68020: without a data cache the compare
+        ; costs more than the chip writes it saves. Allocation failure keeps the
+        ; full copy.
+        btst.b  #AFB_68030,attnflags+3(pc)
+        beq.b   .noshadow
+        movem.l d0-d1/a0-a1/a6,-(sp)
+        move.l  $4.w,a6
+        move.l  #bplbytes*8*2,d0
+        move.l  #MEMF_FAST!MEMF_CLEAR,d1
+        jsr     _LVOAllocMem(a6)
+        lea     delta_shadow(pc),a0
+        move.l  d0,(a0)
+        movem.l (sp)+,d0-d1/a0-a1/a6
+.noshadow:
 
         ; Alright, one more stupid speedup (attempt)
         ; Relocate data from chip data section to fast mem
@@ -646,6 +684,121 @@ patch_main
 
         rts
 
+; The merged executable lost its chip attributes. Retain only DMA objects in
+; chip RAM. Palette snapshots, sprite pointer tables and screen selectors are
+; CPU-only and stay in fast RAM, as do all PL_GA objects used by the slave.
+NEW_CHIP_SIZE = $22760
+
+split_new_chip_data:
+        tst.b   new_fast_data(pc)
+        beq     .done
+        movem.l d0-d7/a0-a6,-(sp)
+        move.l  $4.w,a6
+        move.l  #NEW_CHIP_SIZE,d0
+        move.l  #MEMF_CHIP!MEMF_CLEAR,d1
+        jsr     _LVOAllocMem(a6)
+        tst.l   d0
+        bne.b   .allocated
+        pea     outofmemory(pc)
+        pea     (TDREASON_FAILMSG).w
+        move.l  _resload(pc),a0
+        jmp     resload_Abort(a0)
+.allocated:
+        move.l  d0,a4
+        ; TFX allocates its shadows in patch_main. As there, skip the 020:
+        ; without a data cache comparison costs more than the writes saved.
+        ; Allocation failure retains the complete screen-copy loop.
+        btst.b  #AFB_68030,attnflags+3(pc)
+        beq.b   .no_shadow
+        move.l  #bplbytes*8*2,d0
+        move.l  #MEMF_FAST!MEMF_CLEAR,d1
+        jsr     _LVOAllocMem(a6)
+        lea     delta_shadow(pc),a0
+        move.l  d0,(a0)
+.no_shadow:
+        ; Only the full 040 renderer uses the rotation cache.
+        btst.b  #AFB_68040,attnflags+3(pc)
+        beq.b   .no_rot_table
+        btst.b  #AFB_68060,attnflags+3(pc)
+        bne.b   .no_rot_table
+        move.l  #ROT_SLOTS*ROT_BUCKETS*32,d0
+        move.l  #MEMF_FAST!MEMF_CLEAR,d1
+        jsr     _LVOAllocMem(a6)
+        lea     rot_table(pc),a0
+        move.l  d0,(a0)
+.no_rot_table:
+        lea     new_chip_ranges(pc),a5
+.relocate:
+        move.l  (a5)+,d1
+        bmi.b   .copy_ranges
+        bsr.b   .range
+        move.l  a3,d0
+        sub.l   a2,d0
+        lea     new_chip_ranges(pc),a0
+        add.l   (a5)+,a0
+        bsr     apply_new_chip_relocs
+        bra.b   .relocate
+.copy_ranges:
+        ; Relocate every pointer before copying any initialized objects.
+        lea     new_chip_ranges(pc),a5
+.copy_next:
+        move.l  (a5)+,d1
+        bmi.b   .copied
+        bsr.b   .range
+        addq.l  #4,a5
+        lsr.l   #2,d3
+        subq.w  #1,d3
+.copy:
+        move.l  (a2)+,(a3)+
+        dbf     d3,.copy
+        bra.b   .copy_next
+.copied:
+        movem.l (sp)+,d0-d7/a0-a6
+.done:
+        rts
+.range:
+        lsl.w   #2,d1
+        lea     sections(pc),a2
+        move.l  (a2,d1.w),a2
+        add.l   (a5)+,a2
+        move.l  (a5)+,d3
+        move.l  a4,a3
+        add.l   (a5)+,a3
+        rts
+
+; Section, source offset, length, chip offset, relative relocation-table address.
+; Keep the video buffers 8-byte aligned, as required by their initialization.
+new_chip_ranges:
+        ; Tracker quiet sample and mouse sprite images/buffers.
+        dc.l 1,$00d98,$0173c,$00000,chip_reloc_mouse-new_chip_ranges
+        ; Hardware sprites and copper lists (no palette snapshots).
+        dc.l 1,$027e0,$01b50,$01740,chip_reloc_display-new_chip_ranges
+        ; Paula quiet sample buffer.
+        dc.l 1,$04938,$000c8,$03290,chip_reloc_audio-new_chip_ranges
+        ; Two 320x200x8 bitplane buffers plus alignment space.
+        dc.l 2,$07cec,$1f408,$03358,chip_reloc_video-new_chip_ranges
+        dc.l -1
+
+; d0 = target address delta; a0 = groups terminated by a negative section.
+apply_new_chip_relocs:
+        move.w  (a0)+,d1
+        bmi.b   .done
+        lsl.w   #2,d1
+        lea     sections(pc),a1
+        move.l  (a1,d1.w),a1
+        move.w  (a0)+,d2
+        subq.w  #1,d2
+.next:
+        move.l  (a0)+,d1
+        add.l   d0,(a1,d1.l)
+        dbf     d2,.next
+        bra.b   apply_new_chip_relocs
+.done:
+        rts
+
+new_fast_data: dc.w 0
+        include "chip_reloc_new.i"
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 screenw=320
@@ -654,6 +807,7 @@ rowbytes=screenw/8
 bplbytes=rowbytes*200
 
 sections        ds.l 15 ; "040" version has 15 sections
+render_patchlist ds.l 1
 fast_buf        ds.l 1
 shadowdata      ds.l 1
 old_bufs        ds.l 2
@@ -774,6 +928,131 @@ one_digit macro
         swap    d0
         endm
 
+; A menu or a previous flight may have drawn directly into the chip buffers.
+; Start each PlayLevel invocation with invalid shadows and replay its prologue.
+reset_copy_shadows:
+        move.l  a0,-(sp)
+        lea     delta_seen(pc),a0
+        clr.l   (a0)
+        clr.l   4(a0)
+        move.l  (sp)+,a0
+        dc.w    $f227,$6900 ; fmove.x fp2,-(sp), original tfx.020 prologue
+        move.l  d2,-(sp)
+        JMPPTR play_level_body
+play_level_body_ptr: dc.l 0
+
+; The same for TFX's @PlayLevel ($015ac).
+reset_copy_shadows_tfx:
+        move.l  a0,-(sp)
+        lea     delta_seen(pc),a0
+        clr.l   (a0)
+        clr.l   4(a0)
+        move.l  (sp)+,a0
+        subq.w  #8,sp                   ; original prologue
+        movem.l d2-d3,-(sp)
+        JMPPTR play_level_body_tfx
+play_level_body_tfx_ptr: dc.l 0
+
+COPY_SLOT = 150                         ; compare loop bytes (A/B swaps the slot)
+
+; Compare against the last copy to each chip buffer. Only changed blocks
+; need chip writes; first use always initializes both destination and shadow.
+copy_changed_blocks:
+        move.w  ([_logbase_ptr,pc]),d0
+        move.l  delta_shadow(pc),a2
+        move.w  d0,d2
+        mulu.w  #16000,d0
+        adda.l  d0,a2
+        lea     delta_seen(pc),a3
+        move.l  a0,d4
+        sub.l   a1,d4                   ; destination - source
+        move.w  #bplbytes*8/32-1,d0
+        tst.b   (a3,d2.w)
+        bne.b   .compare
+        st      (a3,d2.w)
+        move.w  #bplbytes*8/16-1,d0
+.init:
+        rept 4
+        move.l  (a1)+,d1
+        move.l  d1,(a0)+
+        move.l  d1,(a2)+
+        endr
+        dbf     d0,.init
+        rts
+; One 32-byte cache line (four 8-byte units) per iteration. A changed unit
+; is written by its position's handler, which continues with the next unit.
+; The destination is addressed relative to the source (D4), so A0 is set
+; only on return.
+COPY_UNIT macro
+        rept 2
+        move.l  (a1)+,d1
+        move.l  d1,(a2)+
+        move.l  d1,-4(a1,d4.l)
+        endr
+        endm
+.compare:
+.u0:
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d0a
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d0b
+.u1:
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d1a
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d1b
+.u2:
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d2a
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d2b
+.u3:
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d3a
+        cmpm.l  (a1)+,(a2)+
+        bne.b   .d3b
+.next:
+        dbf     d0,.u0
+        lea     (a1,d4.l),a0
+        rts
+.d0b:
+        subq.l  #4,a1
+        subq.l  #4,a2
+.d0a:
+        subq.l  #4,a1
+        subq.l  #4,a2
+        COPY_UNIT
+        bra.b   .u1
+.d1b:
+        subq.l  #4,a1
+        subq.l  #4,a2
+.d1a:
+        subq.l  #4,a1
+        subq.l  #4,a2
+        COPY_UNIT
+        bra.b   .u2
+.d2b:
+        subq.l  #4,a1
+        subq.l  #4,a2
+.d2a:
+        subq.l  #4,a1
+        subq.l  #4,a2
+        COPY_UNIT
+        bra.b   .u3
+.d3b:
+        subq.l  #4,a1
+        subq.l  #4,a2
+.d3a:
+        subq.l  #4,a1
+        subq.l  #4,a2
+        COPY_UNIT
+        bra.b   .next
+        ; Fixed-size slot: an A/B swaps the loop with one same-length write.
+        dcb.b   COPY_SLOT-(*-.compare),0
+delta_shadow: dc.l 0
+delta_seen: ds.b 8
+        even
+
 start_frame:
 	    ;BSR.W	LAB_0144		        ;01464: 610008c0 (@Control thunk)
 	    ;BSR.W	@HandleEjection		    ;01468: 6100f1ea
@@ -856,6 +1135,11 @@ do_swap_screen:
         move.l  old_bufs(pc),a0
         move.l  fast_buf(pc),a1
         move.l  a0,(a5) ; Restore screen buffer
+        tst.l   delta_shadow(pc)
+        beq.b   .fullcopy
+        bsr     copy_changed_blocks
+        bra     .copied
+.fullcopy:
         move.w  #bplbytes*8/16-1,d0
 .copy:
         move.l  (a1)+,(a0)+
@@ -864,6 +1148,7 @@ do_swap_screen:
         move.l  (a1)+,(a0)+
         dbf     d0,.copy
 
+.copied:
         ; a1 now points to spite buffer in fast mem
 
         move.l  4+old_bufs(pc),a0
@@ -1019,6 +1304,37 @@ box:
         unlk    a6
         rts
 
+box_new:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+
+        ; _ClipBox
+        cmp.w   #screenh,d1
+        bcc.b   .out
+        cmp.w   #screenh,d3
+        bcs.b   .clipped
+        move.w  #screenh-1,d3
+.clipped:
+        cmp.w   d0,d2
+        bne.b   .wide
+        ; Original blits include a one-pixel-wide rectangle.
+        moveq   #-1,d5
+        bsr     draw_line
+        bra.b   .out
+.wide:
+        move.l  a6,a3   ; preserve a6
+        bsr     draw_rect
+        move.l  a3,a6
+.out:
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
 wait_vsync_enabled: dc.w 0
 
 enable_vsync_wait:
@@ -1157,9 +1473,41 @@ draw_line_strip:
         unlk    a6
         rts
 
+draw_line_normal_new:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+        moveq   #-1,d5          ; pattern
+        bsr     draw_line_new
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
+draw_line_strip_new:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+        move.b  31(a6),d5       ; pattern
+        move.b  d5,d6
+        lsl.w   #8,d5
+        move.b  d6,d5
+        ror.w   #1,d5 ; Blitter starts at bit zero, then rotates left.
+        bsr     draw_line_new
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
 ; d0 = x0, d1 = y0, d2 = x1, d3 = y1, d4 = color, d5 = pattern
 ; d0-d7/a0-a3 trashed
-draw_line:
+DRAW_LINE_FUNC macro
         cmp.w   #screenw,d0
         bcc     .out
         cmp.w   #screenw,d2
@@ -1206,10 +1554,18 @@ draw_line:
 
         ; y dominant
         move.w  d3,d5
+        ifne \1
+        subq.w  #1,d5 ; Blitter line length excludes the final endpoint.
+        bmi     .out
+        endc
         move.w  d3,d6
         lsr.w   #1,d6   ; err = dyabs/2
 .yloop:
+        ifne \1
+        rol.w   #1,d1
+        else
         ror.w   #1,d1
+        endc
         bcc.b   .noplot1
         move.w  d0,d7
         lsr.w   #3,d7
@@ -1230,11 +1586,19 @@ draw_line:
 
 .xdominant:
         move.w  d2,d5
+        ifne \1
+        subq.w  #1,d5 ; Blitter line length excludes the final endpoint.
+        bmi     .out
+        endc
         move.w  d2,d6
         lsr.w   #1,d6 ; err = dxabs/2
 
 .xloop:
+        ifne \1
+        rol.w   #1,d1
+        else
         ror.w   #1,d1
+        endc
         bcc.b   .noplot2
         move.w  d0,d7
         lsr.w   #3,d7
@@ -1253,6 +1617,11 @@ draw_line:
         dbf     d5,.xloop
 
         rts
+
+        endm
+
+draw_line:     DRAW_LINE_FUNC 0
+draw_line_new: DRAW_LINE_FUNC 1
 
 make_plot_func macro
         rept 8
@@ -2299,6 +2668,31 @@ qsort:
         lea     2(a3),a0
         bra.b   qsort
 
+; tfx.020 keeps delta time at A4-$ba4, not the integer build's A4+500.
+skip_some_updates_new:
+        move.w  (-$ba4,a4),d0
+        ext.l   d0
+        bne.b   .done
+        addq.l  #4,(sp)
+.done:
+        rts
+
+skip_model_new:
+        tst.w   (-$ba4,a4)
+        bne.b   .update
+        ; Discard the patch call, then unwind @Model's actual FPU frame.
+        addq.l  #4,sp
+        move.l  (sp)+,d7
+        mc68040
+        fmovem.x (sp)+,fp2-fp4/fp7
+        mc68020
+        addq.l  #8,sp
+        rts
+.update:
+        move.b  (-$ba6,a4),d0
+        subq.b  #1,d0
+        rts
+
 skip_some_updates:
 	MOVE.W	(500,A4),D0		;01708: 302c01f4
 	EXT.L	D0			;0170c: 48c0
@@ -2369,16 +2763,20 @@ pl_020
         PL_PS   $4cb10,draw_mono_image_setup
 
         PL_NOP  $4c800,4                ; Never use blitter in _MaskSprite
+        PL_P    $4c858,mask_sprite8_040 ; all eight planes per mask word
+        PL_GA   $4c970,mask_params_ptr
         PL_P    $4bed8,box              ; _ClipBox
         PL_P    $4bf00,box              ; _Box
         PL_P    $4c138,draw_line_normal ; _DrawLine
         PL_P    $6dd04,draw_line_strip  ; _DrawStipLine
 
-        PL_P    $6b8e0,gouraud_fill     ; @GouraudFill
+        PL_P    $6b8e0,gouraud_runs_c   ; @GouraudFill: rows as runs of one colour
         PL_P    $4d6f0,texture_fill     ; _TextureFill
         PL_P    $6b0ee,normal_fill      ; ScanFillDown
 
         ; @PlayLevel
+        PL_P    $015ac,reset_copy_shadows_tfx
+        PL_GA   $015b2,play_level_body_tfx_ptr
         PL_PSS  $016b0,start_frame,2
         PL_PSS  $018a6,do_swap_screen,2
 
@@ -2653,6 +3051,968 @@ pl_fpu
 
         PL_END
 
+; Shared 020+ projection using the original signed integer division,
+; clipping and saturation. The FPU is not touched.
+project_parameters_ptr: dc.l 0
+project_int_040:
+        move.l a0,-(sp)
+        move.l project_parameters_ptr(pc),a0
+        subq.w #1,d7
+        movem.l (a0),a2-a4
+        moveq #16,d6
+        move.w 12(a0),d5
+        move.w 14(a0),d4
+        movea.w 16(a0),a5
+        movea.w 18(a0),a6
+        moveq #0,d3
+.loop:
+        movem.l 20(a1),d0-d2
+        add.l a2,d0
+        add.l a3,d1
+        add.l a4,d2
+        movem.l d0-d2,(a1)
+        swap d2
+        cmp.w d6,d2
+        ble .clipped
+        clr.w 12(a1)
+        asr.l d5,d0
+        asr.l d4,d1
+        divs.w d2,d0
+        bvs .overflowx
+        add.w a5,d0
+.y:
+        divs.w d2,d1
+        bvs .overflowy
+        add.w a6,d1
+.store:
+        movem.w d0-d1,16(a1)
+        lea 36(a1),a1
+        dbf d7,.loop
+.finish:
+        tst.w d3
+        beq .return
+        movem.l $10a(a0),d0-d2
+        movem.l d0-d2,$f2(a0)
+.return:
+        movea.l (sp)+,a0
+        rts
+.clipped:
+        addq.w #1,d3
+        move.w #-1,12(a1)
+        lea 36(a1),a1
+        dbf d7,.loop
+        bra .finish
+.overflowx:
+        ext.l d2
+        eor.l d2,d0
+        add.l d0,d0
+        subx.w d0,d0
+        eori.w #32767,d0
+        bra .y
+.overflowy:
+        ext.l d2
+        eor.l d2,d1
+        add.l d1,d1
+        subx.w d1,d1
+        eori.w #32767,d1
+        bra .store
+
+; _MaskSprite's CPU cookie-cut (minterm $CA) for the new 040 renderer. The game
+; calls its one-plane blit ($4e53a) eight times from $4e400, re-reading and
+; re-shifting the same mask for every plane. Here each mask word is loaded,
+; edge-masked and shifted once and applied to all eight planes. Per plane, the
+; longword read-modify-write sequence is unchanged; transparent mask words skip
+; writes that would store the unchanged destination. Entry at $4e400 with
+; D6 = size (h<<6|w), A0 = data plane 0, A1 = mask, A3 = destination plane 0,
+; A4 = data plane stride. Leaves D0/D1/A0/A1, CCR, memory and the parameter
+; block as the original loop does; the caller restores the other registers.
+; TFX's _MaskSprite is byte-identical $1ba8 lower: entry $4c858, block $4c970.
+mask_sprite8_040:
+        move.l  mask_params_ptr(pc),a6
+        move.w  d6,d2
+        and.w   #63,d2                  ; w
+        beq     .fallback
+        move.w  d6,d0
+        lsr.w   #6,d0                   ; h
+        beq     .fallback
+        move.l  d1,-(sp)                ; entry D1 (upper word survives)
+        movem.l a0-a1/a3,-(sp)
+        move.w  d6,8(a6)
+        subq.w  #1,d2
+        lea     .wcount(pc),a2
+        move.w  d2,(a2)
+        move.w  10(a6),.amod-.wcount(a2)
+        move.w  12(a6),.bmod-.wcount(a2)
+        move.w  16(a6),.dmod-.wcount(a2)
+        move.l  (a6),d7                 ; first word mask : last word mask
+        move.w  4(a6),d6
+        rol.w   #4,d6
+        and.w   #15,d6
+        neg.w   d6
+        add.w   #16,d6                  ; left shift 1..16, as the original
+        subq.w  #1,d0
+        move.l  a0,a5
+        move.l  a1,a0                   ; A0 = mask
+        move.l  a5,a1                   ; A1 = data plane 0
+        move.l  a4,a2                   ; A2 = data plane stride
+        lea     (a1,a2.l*2),a5
+        add.l   a2,a5                   ; A5 = data plane 3
+        lea     (a5,a2.l*2),a6
+        add.l   a2,a6                   ; A6 = data plane 6
+        lea     32000(a3),a4            ; A4 = destination plane 4
+.row:
+        move.w  .wcount(pc),d2
+.word:
+        moveq   #0,d3
+        move.w  (a0)+,d3
+        cmp.w   .wcount(pc),d2
+        bne.b   .notfirst
+        swap    d7
+        and.w   d7,d3
+        swap    d7
+.notfirst:
+        tst.w   d2
+        bne.b   .notlast
+        and.w   d7,d3
+.notlast:
+        lsl.l   d6,d3
+        beq     .skip
+        move.l  d3,d1
+        not.l   d1
+        ; Data words need no clearing: after the shift, their upper-word
+        ; bits lie outside the mask bits and are discarded by the AND.
+MASKPLANE MACRO
+        move.w  \1,d4
+        lsl.l   d6,d4
+        and.l   d3,d4
+        move.l  \2,d5
+        and.l   d1,d5
+        or.l    d4,d5
+        move.l  d5,\2
+        ENDM
+        MASKPLANE (a1),(a3)
+        MASKPLANE (a1,a2.l),8000(a3)
+        MASKPLANE (a1,a2.l*2),16000(a3)
+        MASKPLANE (a5),24000(a3)
+        MASKPLANE (a1,a2.l*4),(a4)
+        MASKPLANE (a5,a2.l*2),8000(a4)
+        MASKPLANE (a6),16000(a4)
+        MASKPLANE (a6,a2.l),24000(a4)
+.skip:
+        addq.l  #2,a1
+        addq.l  #2,a5
+        addq.l  #2,a6
+        addq.l  #2,a3
+        addq.l  #2,a4
+        dbf     d2,.word
+        adda.w  .amod(pc),a0
+        adda.w  .bmod(pc),a1
+        adda.w  .bmod(pc),a5
+        adda.w  .bmod(pc),a6
+        adda.w  .dmod(pc),a3
+        adda.w  .dmod(pc),a4
+        dbf     d0,.row
+        ; A4+24000-2-dmod is the plane-7 longword the original wrote last.
+        suba.w  .dmod(pc),a4
+        movem.l (sp)+,a0-a1/a3
+        move.l  mask_params_ptr(pc),a6
+        move.l  a1,18(a6)               ; parameter block after plane 7
+        move.l  a2,d2
+        lsl.l   #3,d2
+        sub.l   a2,d2
+        add.l   a0,d2
+        move.l  d2,22(a6)
+        lea     56000(a3),a5
+        move.l  a5,26(a6)
+        move.l  a5,30(a6)
+        add.l   a2,d2
+        move.l  d2,a0                   ; A0 advanced by eight planes
+        lea     64000(a3),a3
+        move.l  (sp)+,d1
+        move.w  8(a6),d1
+        and.w   #63,d1
+        subq.w  #1,d1
+        move.l  #$ffff,d0               ; MOVEQ #7 then DBF
+        lea     $4e42e-$4e518(a6),a6
+        andi.b  #$ef,ccr                ; X = 0 after the original LSL.L
+        tst.l   23998(a4)               ; N/Z of the last MOVE.L D5,(A3)
+        jmp     (a6)
+.fallback:
+        ; Zero width/height: run the original eight one-plane calls.
+        moveq   #7,d0
+.plane:
+        move.l  a1,18(a6)
+        move.l  a0,22(a6)
+        move.l  a3,26(a6)
+        move.l  a3,30(a6)
+        move.w  d6,8(a6)
+        jsr     $4e53a-$4e518(a6)
+        adda.l  a4,a0
+        lea     8000(a3),a3
+        dbf     d0,.plane
+        lea     $4e42e-$4e518(a6),a6
+        jmp     (a6)
+.wcount: dc.w 0
+.amod:  dc.w 0
+.bmod:  dc.w 0
+.dmod:  dc.w 0
+mask_params_ptr: dc.l 0
+
+; @AltFadeColsMiss ($249a) blends RGB triples towards a target palette: per
+; component, dest = (B + (A-B)*f/50) & $ff, skipping entries where B is magenta
+; ($ff,$00,$ff). In flight the game calls it twice per palette change: with
+; f = 50, which makes it a byte copy of A (the MULS.L/DIVSL.L pair cancels
+; exactly), then in place with a lighting factor below 50. For 0 <= f < 50 the
+; division by 50 is an exact reciprocal multiply: |n| / 50 = |n| * 5243 >> 18
+; for |n| <= 255 * 50 (checked exhaustively). Other factors, and index ranges
+; that would wrap, run the original.
+; Entry: D0.w = f, D1.w = count, A0 = A, A1 = B, 4(sp) = dest, 10(sp) = first
+; index. Leaves D0/D1, CCR, memory and the stack frame as the original.
+fade_cols_040:
+        subq.w  #4,sp                   ; the six bytes the patch replaced
+        movem.l d2-d7/a2-a3/a5,-(sp)
+        move.w  d0,d6
+        cmp.w   #50,d6
+        bhi.w   .original               ; negative or above 50
+        move.w  50(sp),d5               ; first index
+        moveq   #0,d3
+        move.w  d1,d3                   ; count
+        beq.w   .empty
+        move.w  d5,d2
+        ext.l   d2
+        add.l   d3,d2                   ; index after the loop
+        cmp.l   #$8000,d2
+        bgt.w   .original               ; the word index would wrap
+        move.w  d5,d0
+        ext.l   d0
+        move.l  d0,d1
+        add.l   d1,d1
+        add.l   d0,d1                   ; 3 * first index
+        move.l  44(sp),a2
+        adda.l  d1,a2
+        lea     (a1,d1.l),a3
+        lea     (a0,d1.l),a5
+        subq.w  #1,d3
+        ; Byte order as the original: the magenta test reads B before the
+        ; entry's writes, then each component is read and written in turn.
+        cmp.w   #50,d6
+        bne.b   .blend
+.entry:
+        cmp.b   #$ff,(a3)
+        bne.b   .copy
+        tst.b   1(a3)
+        bne.b   .copy
+        cmp.b   #$ff,2(a3)
+        beq.b   .skip
+.copy:
+        move.b  (a5)+,(a2)+
+        move.b  (a5)+,(a2)+
+        move.b  (a5)+,(a2)+
+        addq.l  #3,a3
+        dbf     d3,.entry
+        bra.w   .blended
+.skip:
+        addq.l  #3,a3
+        addq.l  #3,a5
+        addq.l  #3,a2
+        dbf     d3,.entry
+        bra.w   .skipped
+.blend:
+        mulu.w  #5243,d6
+        moveq   #18,d7
+.bentry:
+        cmp.b   #$ff,(a3)
+        bne.b   .bcopy
+        tst.b   1(a3)
+        bne.b   .bcopy
+        cmp.b   #$ff,2(a3)
+        beq.b   .bskip
+.bcopy:
+FADE_COMPONENT MACRO
+        moveq   #0,d0
+        move.b  (a5)+,d0
+        moveq   #0,d1
+        move.b  (a3)+,d1
+        sub.l   d1,d0                   ; A - B
+        bpl.b   .pos\@
+        neg.l   d0
+        mulu.l  d6,d0
+        lsr.l   d7,d0
+        neg.b   d0
+        bra.b   .add\@
+.pos\@:
+        mulu.l  d6,d0
+        lsr.l   d7,d0
+.add\@:
+        add.b   d0,d1
+        move.b  d1,(a2)+
+        ENDM
+        FADE_COMPONENT
+        FADE_COMPONENT
+        FADE_COMPONENT
+        dbf     d3,.bentry
+        bra.b   .blended
+.bskip:
+        addq.l  #3,a3
+        addq.l  #3,a5
+        addq.l  #3,a2
+        dbf     d3,.bentry
+        bra.b   .skipped
+.blended:
+        moveq   #0,d0
+        move.b  -1(a2),d0               ; last entry blended: its blue result
+        bra.b   .last
+.skipped:
+        move.l  d2,d0
+        subq.l  #1,d0                   ; last entry skipped: its index
+.last:
+        move.l  d2,d1
+        subq.l  #1,d1
+        move.l  d1,d3
+        add.l   d1,d1
+        add.l   d3,d1                   ; 3 * last index
+        move.w  d2,38(sp)
+        andi.b  #$ef,ccr                ; X = 0 after the original SUBQ.W
+        jmp     ([fade_cols_exit,pc])   ; flag $8020(a4), restore, RTS
+.empty:
+        move.w  d5,38(sp)
+        jmp     ([fade_cols_exit,pc])
+.original:
+        jmp     ([fade_cols_body,pc])
+fade_cols_body: dc.l 0                  ; $24a0
+fade_cols_exit: dc.l 0                  ; $258c
+
+; @SquareRoot ($4bdca, about 60 calls per frame, most from the 3D distance at
+; $4bd4c) returns floor(sqrt(D0)) for unsigned D0 with 16 fixed bit-by-bit
+; iterations, bit = 1<<30 down to 1. While bit > D0 and the root is still zero
+; an iteration changes nothing but the bit, so this enters the same unrolled
+; iterations at the highest power of 4 <= D0 (BFFFO) with constant bits.
+; Leaves D1-D7/A0-A6 and CCR (X/V/C clear, N/Z from the root) as the original.
+ISQRT_STEP macro
+.s\1:
+        move.l  d5,d4
+        add.l   #1<<\1,d4
+        lsr.l   #1,d5
+        cmp.l   d0,d4
+        bhi.s   .n\@
+        sub.l   d4,d0
+        or.l    #1<<\1,d5
+.n\@:
+        endm
+isqrt_040:
+        movem.l d4-d5,-(sp)
+        moveq   #0,d5
+        bfffo   d0{0:32},d4             ; 32 for D0 = 0
+        lsr.w   #1,d4                   ; first bit 1<<(30-2*D4)
+        move.w  .entry(pc,d4.w*2),d4
+        jmp     .entry(pc,d4.w)
+.entry:
+        dc.w    .s30-.entry
+        dc.w    .s28-.entry
+        dc.w    .s26-.entry
+        dc.w    .s24-.entry
+        dc.w    .s22-.entry
+        dc.w    .s20-.entry
+        dc.w    .s18-.entry
+        dc.w    .s16-.entry
+        dc.w    .s14-.entry
+        dc.w    .s12-.entry
+        dc.w    .s10-.entry
+        dc.w    .s8-.entry
+        dc.w    .s6-.entry
+        dc.w    .s4-.entry
+        dc.w    .s2-.entry
+        dc.w    .s0-.entry
+        dc.w    .done-.entry
+        ISQRT_STEP 30
+        ISQRT_STEP 28
+        ISQRT_STEP 26
+        ISQRT_STEP 24
+        ISQRT_STEP 22
+        ISQRT_STEP 20
+        ISQRT_STEP 18
+        ISQRT_STEP 16
+        ISQRT_STEP 14
+        ISQRT_STEP 12
+        ISQRT_STEP 10
+        ISQRT_STEP 8
+        ISQRT_STEP 6
+        ISQRT_STEP 4
+        ISQRT_STEP 2
+        ISQRT_STEP 0
+.done:
+        moveq   #0,d0
+        add.l   d5,d0                   ; X/V/C clear, N/Z from the root
+        movem.l (sp)+,d4-d5
+        rts
+
+; @GouraudFill ($4f840, tfx.020): each row is filled into the chunky line buffer
+; and converted 32 pixels at a time with a masked eight-plane c2p. Follow-camera
+; rows average about ten pixels and 2.4 colours, so one conversion with eight
+; read-modify-writes buys about ten pixels and costs ten times the shading. Here
+; the rows go straight to the planes: pixel i still takes bits 16-23 of
+; lc+dcdx/2+i*dcdx, but per long the span is cleared in all eight planes and each
+; run of one colour ORs its mask into the planes of the colour's set bits (gf_or,
+; at the end of the slave because the patch lists use 16-bit offsets). While
+; |dcdx| <= $ffff the colour steps exactly when the fraction's ADD.W carries
+; (rising) or does not (falling), so the walk is ADD.W/DBcc per pixel and the
+; colour a byte counter. Rows spanning more than 8 + width/4 colours (many short
+; runs per long) or stepping a colour per pixel keep the line buffer and c2p.
+; Within that span |rc-lc| < 2^23, so dcdx comes from the high long of
+; |rc-lc| * ceil(2^32/(width+1)) (gf_recip): with error e < width+1, the product
+; stays exact while |rc-lc| * e < 2^32, and the sign gives DIVS.L's truncation.
+
+; Emit the run that ends with D1 = pixels left after it - 1 (or 0 to the end of
+; the long): D0 = run mask, D5/D6 = start/L of the next run, D1 = gf_or offset.
+GF_EMIT macro
+        moveq   #-1,d0
+        lsr.l   d5,d0
+        sub.w   d1,d6
+        addq.w  #1,d6                   ; run length
+        add.w   d6,d5                   ; s after the run
+        moveq   #-1,d6
+        lsr.l   d5,d6
+        eor.l   d6,d0                   ; run mask
+        move.w  d1,d6
+        subq.w  #1,d6                   ; L after the run
+        moveq   #0,d1
+        move.b  d4,d1
+        move.w  (a4,d1.w*2),d1
+        endm
+
+; The longs of one row for one sign of dcdx: \1 = cs and \2 = addq when rising,
+; \1 = cc and \2 = subq when falling.
+GF_LONGS macro
+        lea     .back\@(pc),a6
+.long\@:
+        moveq   #31,d6
+        sub.l   d5,d6
+        cmp.l   d7,d6
+        ble.s   .cut\@
+        move.l  d7,d6                   ; L = pixels in this long - 1
+.cut\@:
+        sub.l   d6,d7
+        subq.l  #1,d7                   ; pixels after this long - 1
+        moveq   #-1,d0
+        lsr.l   d5,d0
+        moveq   #31,d1
+        sub.l   d5,d1
+        sub.l   d6,d1
+        lsr.l   d1,d0
+        lsl.l   d1,d0                   ; pixels s..s+L
+        not.l   d0                      ; clear the span in every plane
+        and.l   d0,(0-4)*bplbytes(a1)
+        and.l   d0,(1-4)*bplbytes(a1)
+        and.l   d0,(2-4)*bplbytes(a1)
+        and.l   d0,(3-4)*bplbytes(a1)
+        and.l   d0,(4-4)*bplbytes(a1)
+        and.l   d0,(5-4)*bplbytes(a1)
+        and.l   d0,(6-4)*bplbytes(a1)
+        and.l   d0,(7-4)*bplbytes(a1)
+.run\@:
+        move.w  d6,d1
+.px\@:
+        add.w   d3,d2
+        db\1    d1,.px\@
+        b\1.s   .step\@                 ; the colour steps after this run
+        moveq   #0,d1                   ; the run reaches the end of the long
+        GF_EMIT
+        jmp     (a0,d1.w)
+.step\@:
+        GF_EMIT
+        \2.b    #1,d4                   ; colour of the next run
+        jmp     (a0,d1.w)
+.back\@:
+        tst.w   d6
+        bpl.s   .run\@
+        addq.l  #4,a1
+        moveq   #0,d5
+        tst.l   d7
+        bpl.w   .long\@
+        lea     -rowbytes(a3),a3
+        bra.w   .yloop
+        endm
+
+; The rows of one call: A2 = scan table, A3 = first row, A0/A4 = gf_or/gf_offsets,
+; and with \1 = 1 A5 = gf_recip (68060: \1 = 0, DIVU.L, as 64-bit MULU.L traps).
+GF_BODY macro
+.yloop:
+        moveq   #16,d2
+        move.l  (a2)+,d0
+        lsr.l   d2,d0                   ; lx
+        move.l  (a2)+,d1
+        lsr.l   d2,d1
+        sub.l   d0,d1                   ; width - 1
+        blt.w   .done
+        move.l  (a2)+,d2                ; lc
+        move.l  (a2)+,d3
+        sub.l   d2,d3                   ; rc-lc
+        move.l  d3,d4
+        bpl.s   .abs
+        neg.l   d4                      ; |rc-lc|
+.abs:
+        move.l  d4,d5
+        clr.w   d5
+        swap    d5                      ; colour span |rc-lc| >> 16
+        move.l  d1,d6
+        lsr.l   #2,d6
+        addq.l  #8,d6
+        cmp.l   d6,d5
+        bhi.w   .steep                  ; more than 8 + width/4 colours
+        ifne    \1
+        move.l  d1,d6
+        subq.l  #1,d6
+        cmp.l   #GF_WIDTHS-2,d6
+        bhi.w   .wide                   ; width 1, or wider than gf_recip
+        mulu.l  (a5,d1.l*4),d5:d4       ; |rc-lc|/(width+1), exact for this span
+        else
+        moveq   #1,d6
+        add.l   d1,d6
+        divu.l  d6,d4                   ; |rc-lc|/(width+1)
+        move.l  d4,d5
+        endc
+.quot:
+        move.l  d5,d4
+        tst.l   d3
+        bpl.s   .qpos
+        neg.l   d4                      ; truncated toward zero, as DIVS.L
+.qpos:
+        move.l  d4,d3                   ; dcdx
+        asr.l   #1,d4
+        add.l   d4,d2                   ; lc+dcdx/2
+        cmp.l   #$ffff,d5
+        bhi.w   .steepfill              ; a colour step per pixel or more
+        moveq   #-32,d4
+        and.l   d0,d4
+        lsr.l   #3,d4
+        lea     (a3,d4.l),a1
+        add.w   #4*bplbytes,a1          ; plane 4 of the first long
+        moveq   #31,d5
+        and.l   d0,d5                   ; s = first pixel in the long
+        move.l  d1,d7                   ; pixels left - 1
+        move.l  d2,d4
+        swap    d4                      ; d4.b = colour, d2.w = fraction
+        tst.l   d3
+        bmi.w   .falling
+        GF_LONGS cs,addq
+.falling:
+        GF_LONGS cc,subq
+        ifne    \1
+.wide:
+        move.l  d4,d5                   ; width 1: the quotient is |rc-lc|
+        tst.l   d1
+        beq.w   .quot
+        endc
+.steep:
+        moveq   #1,d4
+        add.l   d1,d4
+        divs.l  d4,d3
+        move.l  d3,d4
+        asr.l   #1,d4
+        add.l   d4,d2
+.steepfill:
+        movem.l a0/a2-a5,-(sp)
+        lea     linebuf(pc),a0
+        lea     (a0,d0.l),a1
+        move.l  d1,d5
+        moveq   #16,d6
+.gouraud:
+        move.l  d2,d4
+        lsr.l   d6,d4
+        add.l   d3,d2
+        move.b  d4,(a1)+
+        dbf     d5,.gouraud
+        add.l   d0,d1
+        move.l  a3,a1
+        bsr     copy_linebuf_part
+        movem.l (sp)+,a0/a2-a5
+        lea     -rowbytes(a3),a3
+        bra.w   .yloop
+.done:
+        movem.l (sp)+,d0-d7/a0-a6
+        rts
+        endm
+
+; Entries: gouraud_runs for tfx.020 (scan stream inline at SP+4, y in A5) and
+; gouraud_runs_c for TFX (C arguments: y at 4(SP), scan table at 8(SP)).
+gouraud_runs:
+        movem.l d0-d7/a0-a6,-(sp)
+        lea     64(sp),a2               ; scan table, inline after the return
+        move.w  a5,d6                   ; y
+        bra.s   gr_start
+gouraud_runs_c:
+        movem.l d0-d7/a0-a6,-(sp)
+        move.l  68(sp),a2               ; scan table
+        move.w  66(sp),d6               ; y
+gr_start:
+        move.w  ([_logbase_ptr,pc]),d5
+        move.l  ([_screen1_ptr,pc],d5.w),a3
+        mulu.w  #rowbytes,d6
+        add.l   d6,a3                   ; a3 = row
+        lea     gf_or(pc),a0
+        lea     gf_offsets(pc),a4
+        btst.b  #AFB_68060,attnflags+3(pc)
+        bne.w   gr_body_div
+        lea     gf_recip(pc),a5
+gr_body_mul:
+        GF_BODY 1
+gr_body_div:
+        GF_BODY 0
+
+
+; DoRotPt0's two-component delta point ($59748, about 1,100 per frame): the
+; running sums A2-A4 gain M * (D0,D1) through six MULS.W, then the tail at
+; $59778 stores the point and dispatches the next command. The same shapes are
+; drawn many times per frame under few rotations, so about 70% of these points
+; repeat a (delta, matrix) pair seen earlier in the frame, but never the
+; previous point's. A table per matrix slot holds each delta's three increments
+; and the last product (the original's final D3). The key compares the delta
+; words exactly and the matrix registers D4/D5/D6/A5 and the high word of D7
+; exactly, so a hit adds what the six products would add: the sums are mod
+; 2^32 either way. Leaves D0/D1/D3, A2-A4, X and memory as the original
+; (the miss path uses the stack below SP). Buckets are invalidated with a key
+; that hashes elsewhere, so no key value is reserved.
+ROT_SLOTS = 4
+ROT_BUCKETS = 256                       ; 32-byte entries: key, three increments, D3
+rot_delta2_040:
+        movem.w (a0)+,d0-d1             ; the delta (dx, dy)
+        cmp.l   rot_cur(pc),d4
+        bne.w   .matrix
+        cmp.l   rot_cur+4(pc),d5
+        bne.w   .matrix
+        cmp.l   rot_cur+8(pc),d6
+        bne.w   .matrix
+        cmpa.l  rot_cur+12(pc),a5
+        bne.w   .matrix
+        move.l  d7,d3
+        clr.w   d3
+        cmp.l   rot_cur+16(pc),d3
+        bne.w   .matrix
+.lookup:
+        ; No instruction here changes X (the original's MULS.W/ADDA.L keep it).
+        moveq   #0,d3
+        move.w  d1,d3
+        rol.w   #5,d3
+        eor.w   d0,d3
+        and.w   #(ROT_BUCKETS-1)<<5,d3
+        or.w    rot_slot(pc),d3
+        cmp.w   ([rot_table,pc],d3.l),d0
+        bne.b   .miss
+        cmp.w   ([rot_table,pc],d3.l,2),d1
+        bne.b   .miss
+        adda.l  ([rot_table,pc],d3.l,4),a2
+        adda.l  ([rot_table,pc],d3.l,8),a3
+        adda.l  ([rot_table,pc],d3.l,12),a4
+        move.l  ([rot_table,pc],d3.l,16),d3
+        jmp     ([rot_tail,pc])
+.miss:
+        move.l  a1,-(sp)
+        move.w  ccr,-(sp)               ; X survives the arithmetic below
+        move.l  rot_table(pc),a1
+        adda.l  d3,a1
+        move.w  d0,(a1)+
+        move.w  d1,(a1)+
+        move.l  d4,d3
+        swap    d3
+        muls.w  d0,d3
+        move.l  d3,(a1)
+        move.w  d5,d3
+        muls.w  d0,d3
+        move.l  d3,4(a1)
+        move.l  a5,d3
+        swap    d3
+        muls.w  d0,d3
+        move.l  d3,8(a1)
+        move.l  d5,d3
+        swap    d3
+        muls.w  d1,d3
+        add.l   d3,(a1)
+        move.w  d6,d3
+        muls.w  d1,d3
+        add.l   d3,4(a1)
+        move.l  d7,d3
+        swap    d3
+        muls.w  d1,d3
+        add.l   d3,8(a1)
+        move.l  d3,12(a1)               ; the original's final D3
+        adda.l  (a1)+,a2
+        adda.l  (a1)+,a3
+        adda.l  (a1)+,a4
+        move.w  (sp)+,ccr
+        move.l  (sp)+,a1
+        jmp     ([rot_tail,pc])
+.matrix:
+        ; New matrix: find its slot, or take the oldest and invalidate it.
+        tst.l   rot_table(pc)
+        beq.w   .plain                  ; no table: the original products
+        move.w  ccr,-(sp)
+        movem.l d1-d2/a1,-(sp)
+        move.l  d7,d3
+        clr.w   d3                      ; the matrix word in D7's high half
+        lea     rot_mats(pc),a1
+        moveq   #0,d2
+.find:
+        cmp.l   (a1),d4
+        bne.b   .next
+        cmp.l   4(a1),d5
+        bne.b   .next
+        cmp.l   8(a1),d6
+        bne.b   .next
+        cmpa.l  12(a1),a5
+        bne.b   .next
+        cmp.l   16(a1),d3
+        beq.b   .found
+.next:
+        lea     20(a1),a1
+        addq.w  #1,d2
+        cmp.w   #ROT_SLOTS,d2
+        bne.b   .find
+        move.w  rot_next(pc),d2         ; oldest slot
+        lea     rot_next(pc),a1
+        addq.w  #1,(a1)
+        andi.w  #ROT_SLOTS-1,(a1)
+        move.w  d2,d1
+        mulu.w  #20,d1
+        lea     rot_mats(pc),a1
+        adda.l  d1,a1
+        move.l  d4,(a1)+
+        move.l  d5,(a1)+
+        move.l  d6,(a1)+
+        move.l  a5,(a1)+
+        move.l  d3,(a1)
+        moveq   #0,d1
+        move.w  d2,d1
+        ror.w   #3,d1                   ; slot * 8192
+        move.l  rot_table(pc),a1
+        adda.l  d1,a1
+        move.w  #ROT_BUCKETS-1,d3
+.clear:
+        clr.l   (a1)                    ; key (0,0) hashes to bucket 0 ...
+        lea     32(a1),a1
+        dbf     d3,.clear
+        move.l  rot_table(pc),a1
+        move.l  #$00200000,(a1,d1.l)    ; ... and bucket 0 gets (32,0)
+.found:
+        ror.w   #3,d2                   ; slot * 8192
+        lea     rot_slot(pc),a1
+        move.w  d2,(a1)
+        lea     rot_cur(pc),a1
+        move.l  d4,(a1)+
+        move.l  d5,(a1)+
+        move.l  d6,(a1)+
+        move.l  a5,(a1)+
+        move.l  d7,d3
+        clr.w   d3
+        move.l  d3,(a1)
+        movem.l (sp)+,d1-d2/a1
+        move.w  (sp)+,ccr
+        bra.w   .lookup
+.plain:
+        move.l  d4,d3                   ; the original handler from $5974c
+        swap    d3
+        muls.w  d0,d3
+        adda.l  d3,a2
+        move.w  d5,d3
+        muls.w  d0,d3
+        adda.l  d3,a3
+        move.l  a5,d3
+        swap    d3
+        muls.w  d0,d3
+        adda.l  d3,a4
+        move.l  d5,d3
+        swap    d3
+        muls.w  d1,d3
+        adda.l  d3,a2
+        move.w  d6,d3
+        muls.w  d1,d3
+        adda.l  d3,a3
+        move.l  d7,d3
+        swap    d3
+        muls.w  d1,d3
+        adda.l  d3,a4
+        jmp     ([rot_tail,pc])
+rot_table: dc.l 0
+rot_tail: dc.l 0                        ; $59778
+rot_slot: dc.w 0
+rot_next: dc.w 0
+rot_cur: dc.l 0,0,0,0,1                 ; low word set: matches no D7
+rot_mats: dcb.l ROT_SLOTS*5,1           ; likewise
+
+; ScanFillDown's scanline loop ($6c520, about 4,100 lines per frame) derives
+; each line's long offsets, bit offset and widths from the edges' integer parts
+; with BFEXTU, shifts and subtractions, then dispatches on the span's long
+; count; a span that crosses a long boundary writes each of the eight planes
+; with two BFINS. Here per-x tables give the long offset and both edge masks.
+; A span inside one long, and each edge long of a wider span, is plotted by
+; the game's colour-specialised routine (PlotColour $6a4b8: eight AND/OR, then
+; JMP (A6)), as the original plots its narrow spans; the longs between the
+; edges are filled plane by plane as the original does. A non-empty span whose
+; right edge lies beyond x = 319 continues in the original loop from that line.
+; Memory, D0, D7, A0, A2-A5 and the flags at exit are the original's. D1-D6,
+; A1 and A6 hold other scratch values: the only caller ($5f1c4) restores A1
+; and A6, and the edge walker and Polygon after it write the others first.
+SFD_RIGHT = 319
+sfd_span_040:
+        move.l  d0,-(sp)                ; colour word, restored at exit
+        move.w  d0,d1
+        clr.b   d1
+        lsr.w   #3,d1
+        move.l  a4,d0                   ; left slope
+        lea     ([PlotColour_ptr,pc],d1.w),a4 ; this colour's plotter
+        move.l  a5,d5                   ; right slope
+        lea     sfd_masks(pc),a5
+        lea     .line(pc),a6
+        adda.l  #55960,a0
+.line:
+        lea     40(a0),a0
+        subq.w  #1,d7
+        bmi.w   .exit
+        move.l  a2,d1
+        move.l  a3,d2
+        adda.l  d0,a2
+        adda.l  d5,a3
+        swap    d1                      ; left x
+        swap    d2                      ; right x
+        cmp.w   d1,d2
+        bcs.b   .line                   ; empty, as the original's tests find
+        cmp.w   #SFD_RIGHT,d2
+        bhi.w   .original
+        move.w  sfd_offsets(pc,d1.w*2),d3 ; 4 * left long
+        move.w  sfd_offsets(pc,d2.w*2),d4
+        sub.w   d3,d4                   ; 4 * (right long - left long)
+        bne.b   .wide
+        lea     -32000(a0,d3.w),a1
+        move.l  4(a5,d2.w*8),d2         ; right edge mask
+        and.l   (a5,d1.w*8),d2          ; and left edge mask
+        move.l  d2,d6
+        not.l   d6
+        jmp     (a4)
+.wide:
+        lea     -32000(a0,d3.w),a1      ; left edge long
+        move.l  4(a5,d2.w*8),d3         ; right edge mask
+        move.l  (a5,d1.w*8),d2          ; left edge mask
+        move.l  d2,d6
+        not.l   d6
+        lea     .middle(pc),a6
+        jmp     (a4)
+.middle:
+        subq.w  #4,d4                   ; 4 * longs between the edges
+        beq.b   .right
+        move.w  2(sp),d1                ; colour word, plane 7's bit first
+        lea     32004(a1),a6            ; plane 7, first long after the edge
+        move.w  d4,d2
+        neg.w   d2
+        asr.w   #1,d2
+        add.w   d1,d1
+.plane:
+        subx.l  d6,d6
+        jmp     .filled(pc,d2.w)
+        rept    8
+        move.l  d6,(a6)+
+        endr
+.filled:
+        suba.w  d4,a6
+        lea     -8000(a6),a6
+        add.w   d1,d1
+        bne.b   .plane
+.right:
+        lea     4(a1,d4.w),a1           ; right edge long
+        move.l  d3,d2
+        move.l  d3,d6
+        not.l   d6
+        lea     .line(pc),a6
+        jmp     (a4)
+.original:
+        suba.l  d0,a2
+        suba.l  d5,a3
+        movea.l d0,a4
+        movea.l d5,a5
+        movem.l (sp)+,d0
+        movea.l sfd_loop(pc),a6
+        jmp     ([sfd_line,pc])
+.exit:
+        movea.l d0,a4                   ; MOVEA/MOVEM keep SUBQ's flags
+        movea.l d5,a5
+        movem.l (sp)+,d0
+        jmp     ([sfd_exit,pc])
+sfd_exit: dc.l 0                        ; $6c4b8
+sfd_loop: dc.l 0                        ; $6c520
+sfd_line: dc.l 0                        ; $6c528
+        cnop    0,4
+sfd_masks:                              ; per x: left edge mask, right edge mask
+SFD_X   set     0
+        rept    SFD_RIGHT+1
+        ifeq    SFD_X&31
+        dc.l    -1
+        else
+        dc.l    $7fffffff>>((SFD_X&31)-1) ; positive: the shift fills with zeros
+        endc
+        dc.l    ($ffffffff<<(31-(SFD_X&31)))&$ffffffff
+SFD_X   set     SFD_X+1
+        endr
+sfd_offsets:                            ; per x: 4 * long index
+SFD_X   set     0
+        rept    SFD_RIGHT+1
+        dc.w    (SFD_X>>5)*4
+SFD_X   set     SFD_X+1
+        endr
+
+; Shared 020+ renderer; only rotation caching is specific to the full 040.
+pl_fpu_new_render_040:
+        PL_START
+        PL_IFC4X 2
+        PL_ELSE
+        PL_P    $59748,rot_delta2_040
+        PL_GA   $59778,rot_tail
+        PL_ENDIF
+        PL_NEXT pl_fpu_new_render
+
+pl_fpu_new_render:
+        PL_START
+        PL_IFC4X 2
+        PL_ELSE
+        PL_IFC5
+        PL_ELSE
+        PL_P    $55e32,project_int_040
+        PL_GA   $55bf4,project_parameters_ptr
+        PL_ENDIF
+        PL_P    $016de,reset_copy_shadows
+        PL_GA   $016e4,play_level_body_ptr
+        PL_P    $4e400,mask_sprite8_040 ; all eight planes per mask word
+        PL_GA   $4e518,mask_params_ptr
+        PL_P    $0249a,fade_cols_040    ; @AltFadeColsMiss, factor 50 as a copy
+        PL_GA   $024a0,fade_cols_body
+        PL_GA   $0258c,fade_cols_exit
+        PL_P    $6c514,sfd_span_040     ; ScanFillDown lines from per-x tables
+        PL_GA   $6c4b8,sfd_exit
+        PL_GA   $6c520,sfd_loop
+        PL_GA   $6c528,sfd_line
+        PL_P    $4bdca,isqrt_040        ; @SquareRoot from the first useful bit
+        PL_P    $4dba0,box_new
+        PL_P    $4dbc8,box_new
+        PL_P    $4de00,draw_line_normal_new
+        PL_P    $500dc,draw_line_strip_new
+        PL_P    $4f840,gouraud_runs     ; Gouraud rows as runs of one colour
+        PL_P    $4f9f8,texture_fill
+        PL_L    $6c534,$e9c136c5 ; bfextu d1{27:5},d3
+        PL_L    $6c538,$78209843 ; moveq #32,d4 / sub.w d3,d4
+        PL_L    $6c53c,$e9c256c5 ; bfextu d2{27:5},d5
+        ; Lines beyond x = 319 still run the original loop with these edges.
+        PL_GA   $55bec,_texture_ptr_ptr
+        PL_ENDIF
+        PL_IFC4X 5 ; Uncapped: skip simulation work when no vblank elapsed.
+        PL_W    $1abfe,$7000
+        PL_PS   $01830,skip_some_updates_new
+        PL_PS   $01850,skip_some_updates_new
+        PL_PSS  $1fec4,zoom_fix1,2
+        PL_PS   $1ec38,skip_model_new
+        PL_ENDIF
+        PL_IFC4X 6 ; One-frame takes precedence, as on the integer build.
+        PL_W    $1abfe,$7001
+        PL_PSS  $1fec4,zoom_fix1,2
+        PL_ENDIF
+        PL_END
+
 pl_fpu_new
         PL_START
         ; force FPU
@@ -2704,10 +4064,7 @@ pl_fpu_new
         PL_PSS  $016fe,enable_vsync_wait,2
         PL_ENDIF
 
-        ; Not supported as it's too slow anyway
-        ;PL_IFC4X        5 ; Uncapped frame rate
-        ;PL_W    $,$0000 ; Disable frame rate limit
-        ;PL_ENDIF
+        ; Additional rendering/timestep patches are in pl_fpu_new_render.
 
         PL_GA   $3f99e,@ThreeScreenSwap_ptr
         PL_GA   $4ce00,_screen1_ptr
@@ -2725,8 +4082,85 @@ pl_fpu_new
         PL_GA   $6f4a2,_sprogtab_ptr
         PL_GA   $4d85e,WaitingForVsync_ptr
 
+        PL_W    $4e080,$6024 ; Avoid double missile fire from joystick press
+
+        ; Fix sorting when number of objects is at max (same arrays as TFX).
+        PL_PSS  $5efbe,do_sort,26
+        PL_PSS  $5f03e,do_sort,8
+        PL_GA   $5bf16,depth_ptr
+
         PL_END
 
+; Truncate the extended significand directly, without a 32-bit integer limit.
+; Preserve the source, FPCR, integer registers and integer condition codes.
+NATIVE_INT:MACRO
+ni_\1_\2:
+        move.w ccr,-(sp)
+        movem.l d0-d2,-(sp)
+        fmove.x fp\1,-(sp)
+        moveq #0,d2
+        move.w (sp),d0
+        and.l #$7fff,d0
+        cmp.w #$7fff,d0
+        beq .special\@
+        sub.w #$3fff,d0
+        bmi .zero\@
+        cmp.w #63,d0
+        bge .done\@
+        neg.w d0
+        add.w #63,d0
+        cmp.w #32,d0
+        blt .low\@
+        move.l 8(sp),d2
+        clr.l 8(sp)
+        sub.w #32,d0
+        moveq #-1,d1
+        lsl.l d0,d1
+        move.l 4(sp),d0
+        not.l d1
+        and.l d1,d0
+        not.l d1
+        and.l d1,4(sp)
+        or.l d0,d2
+        bra .done\@
+.low\@:
+        moveq #-1,d1
+        lsl.l d0,d1
+        move.l 8(sp),d2
+        not.l d1
+        and.l d1,d2
+        not.l d1
+        and.l d1,8(sp)
+        bra .done\@
+.zero\@:
+        move.l 4(sp),d2
+        or.l 8(sp),d2
+        and.w #$8000,(sp)
+        clr.l 4(sp)
+        clr.l 8(sp)
+.done\@:
+        fmove.x (sp)+,fp\2
+        tst.l d2
+        beq .exact\@
+        fmove.l fpsr,d1
+        or.l #$208,d1 ; INEX2 and accrued INEX for discarded fraction
+        fmove.l d1,fpsr
+.exact\@:
+        movem.l (sp)+,d0-d2
+        move.w (sp)+,ccr
+        rts
+.special\@:
+        lea 12(sp),sp
+        movem.l (sp)+,d0-d2
+        move.w (sp)+,ccr
+        fintrz.x fp\1,fp\2 ; FPSP safety net for NaN/infinity
+        rts
+        ENDM
+
+        include native_fpu_sites.i
+        include native_math.i
+
+; Retain the original emulation list on 060; 040 uses native_fpu_patches.
 pl_fpu_new_040:
         PL_IFC5
         PL_ELSE
@@ -2818,6 +4252,10 @@ pl_fpu_new_040:
         PL_END
 
 install_zero_page_patches:
+    btst.b #AFB_68060,attnflags+3(pc)
+    bne.b .legacy
+    bsr install_native_fpu
+.legacy:
     movem.l a1,-(a7)
     lea needs_fpu_patches(pc),a1
     st.b    (a1)
@@ -3210,7 +4648,6 @@ _stacksize
                 dc.b    'TAGSHERE' ; Make this section easier to find in .whdl_dump
                 ; And make sure all tags are saved
 tag
-                dc.l    WHDLTAG_CUSTOM1_GET, 0
                 dc.l    WHDLTAG_CUSTOM2_GET, 0
                 dc.l	WHDLTAG_CUSTOM3_GET
 executable
@@ -3250,5 +4687,52 @@ mem_patched
 needs_fpu_patches
     dc.b    0
     cnop    0,4
+
+; gouraud_runs: per colour, OR the run mask D0 into the planes of its set
+; bits and go back to (A6). Entries are 4 bytes per set bit (2 for plane 4, whose
+; displacement is zero) plus the JMP.
+GF_SIZE macro
+        dc.w    GF_OFF
+GF_OFF  set     GF_OFF+2+4*(((GF_C>>0)&1)+((GF_C>>1)&1)+((GF_C>>2)&1)+((GF_C>>3)&1)+((GF_C>>5)&1)+((GF_C>>6)&1)+((GF_C>>7)&1))+2*((GF_C>>4)&1)
+        endm
+GF_PLANE macro
+        ifne    GF_C&(1<<\1)
+        or.l    d0,(\1-4)*bplbytes(a1)
+        endc
+        endm
+gf_offsets:
+GF_C    set     0
+GF_OFF  set     0
+        rept    256
+        GF_SIZE
+GF_C    set     GF_C+1
+        endr
+gf_or:
+GF_C    set     0
+        rept    256
+        GF_PLANE 0
+        GF_PLANE 1
+        GF_PLANE 2
+        GF_PLANE 3
+        GF_PLANE 4
+        GF_PLANE 5
+        GF_PLANE 6
+        GF_PLANE 7
+        jmp     (a6)
+GF_C    set     GF_C+1
+        endr
+
+; gouraud_runs: ceil(2^32/n) for n = width+1 = 2..GF_WIDTHS, indexed by
+; width-1 (entry 0 unused). vasm evaluates in 32 bits: with q, r = divmod($7fffffff, n),
+; floor((2^32-1)/n) = 2q + (2r+1)/n.
+GF_WIDTHS = 320
+        cnop    0,4
+gf_recip:
+        dc.l    0
+GF_N    set     2
+        rept    GF_WIDTHS-1
+        dc.l    2*($7fffffff/GF_N)+(2*($7fffffff-($7fffffff/GF_N)*GF_N)+1)/GF_N+1
+GF_N    set     GF_N+1
+        endr
 ;============================================================================
 
