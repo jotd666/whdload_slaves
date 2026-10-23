@@ -88,8 +88,19 @@ IGNORE_JOY_DIRECTIONS
 ;============================================================================
 
 
+	IFD BARFLY
+	DOSCMD	"WDate  >T:date"
+	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.2 (22.10.2026)"
+	dc.b	"2.2"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
 	dc.b	"$","VER: slave "
 	DECL_VERSION
