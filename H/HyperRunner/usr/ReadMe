@@ -28,6 +28,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1-B (24.10.2026):
+ - added glow icon by DanyPPC
+ 
  version 1.1 (17.10.2026):
  - removed crash on game over
  
