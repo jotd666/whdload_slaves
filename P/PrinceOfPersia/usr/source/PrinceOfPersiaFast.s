@@ -1375,8 +1375,10 @@ fast_shape_expand
 	jmp	($0581a-$1000,a0)
 .original
 	moveq	#0,d5
+	; The six-byte entry patch also overwrites move.w #-1,d0's opcode.
+	move.w	#-1,d0
 	move.l	_reloc_base(pc),a0
-	jmp	($0590c-$1000,a0)
+	jmp	($05910-$1000,a0)
 
 ; Reuse single-part foreground setup across passes. Across frames, only
 ; immutable terrain images qualify; full-room drawing and background writes
