@@ -21,7 +21,7 @@
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 	IFND DEBUG
-		dc.w	17			;ws_Version
+		dc.w	17			;ws_Version (conditional patches need WHDLoad 17.2)
 	ELSE
 		dc.w	18			;ws_Version
 	ENDC
@@ -33,7 +33,9 @@ _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	0			;ws_DontCache
 _keydebug	dc.b	0			;ws_keydebug = F9
 _keyexit	dc.b	$5F;ws_keyexit = help
-_expmem		dc.l	0			;ws_ExpMem
+_expmem
+ dc.l -$8d000
+
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
@@ -44,19 +46,8 @@ _expmem		dc.l	0			;ws_ExpMem
 
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
-	IFD	DATETIME
-		dc.b	" "
-		incbin	datetime
-	ENDC
+	dc.b	"3.0b (22.10.2026)"
 	ENDM
 
 _name		dc.b	"Road Rash",0
@@ -71,9 +62,10 @@ _config
 	dc.b	"C1:L:password:none,level 1 Diablo 1000 big money,Millions of dollars and level 4,"
 	dc.b	"PANDA 600,BANZAI 750,KAMIKAZE 750,SHURIKEN 1000,FERRUCI 850,PANDA 750,DIABLO 1000;"
 	
+	dc.b	"C2:B:Enhanced framerate;"
 	dc.b	0
 	EVEN
-	include	ReadJoyPad.s
+	include	ReadJoypad.s
 	
 ;======================================================================
 Start	;	A0 = resident loader
@@ -104,6 +96,7 @@ Start	;	A0 = resident loader
 		sub.l	a1,a1
 		jsr	(resload_Patch,a2)
 		
+		bsr public_loader_init
 		move.l	expansion_memory(pc),A0	; expansion start
 		move.l	A0,D0	; and size
 
@@ -136,6 +129,7 @@ PatchIntro1:
 	sub.l	a1,a1
 	move.l	_resload(pc),a2
 	jsr	(resload_Patch,a2)
+	bsr public_boot_title
 	movem.l	(a7)+,d0-d1/a1-a2
 
 	move.l	$4C98.W,A0
@@ -152,6 +146,7 @@ PatchIntro2:
 	sub.l	a1,a1
 	move.l	_resload(pc),a2
 	jsr	(resload_Patch,a2)
+	bsr public_boot_intro
 	movem.l	(a7)+,d0-d1/a1-a2
 	
 	move.l	$4C98.W,A0
@@ -162,7 +157,6 @@ pl_intro_2:
 	PL_P	$8E58,ReadSomeFile
 	PL_P	$8CDA,MoveD0_2
 	PL_END
-
 
 	
 ;MoveD0_1:
@@ -219,6 +213,40 @@ PatchLoader2:
 .nopad
 	move.l	_resload(pc),a2
 	jsr	(resload_Patch,a2)
+	bsr	step_select_path
+	tst.l	d0
+	beq.b	.no_c
+; WHDLoad honors NoCache and flushes after SetCPU. BaseMem is write-through,
+; never copyback; preserve the existing ExpMem and slave cacheability.
+	move.l #WCPUF_Base_WT|WCPUF_IC|WCPUF_DC,d0
+	move.l #WCPUF_Base|WCPUF_IC|WCPUF_DC,d1
+	move.l _resload(pc),a2
+	jsr (resload_SetCPU,a2)
+	move.l	expansion_memory(pc),a1
+	lea	pl_c_simulation(pc),a0
+	move.l	_resload(pc),a2
+	jsr	(resload_Patch,a2)
+	lea _base(pc),a0
+	adda.l #step_object_fast_init-_base,a0
+	jsr (a0)
+	lea _base(pc),a0
+	adda.l #step_collision_geometry_init-_base,a0
+	jsr (a0)
+; Copy after simulation patches so the relocated code includes steering hooks.
+	lea _base(pc),a0
+	adda.l #step_physics_fast_init-_base,a0
+	jsr (a0)
+	lea _base(pc),a0
+	adda.l #step_physics_aux_init-_base,a0
+	jsr (a0)
+.no_c:
+; Install render correction after the native simulation geometry is copied.
+	move.l expansion_memory(pc),a1
+	lea pl_visual_height(pc),a0
+	move.l _resload(pc),a2
+	jsr (resload_Patch,a2)
+; The native 68000 path also benefits from public code and stack placement.
+	bsr public_main_init
 	movem.l	(a7)+,d0-d1/a0-a2
 	jmp	(a1)
 	
@@ -256,8 +284,13 @@ pl_messages_main
 
 	PL_NEXT	pl_main
 	
+
 pl_main
 	PL_START
+	PL_P $9E2C,visual_actor_visibility
+	PL_PS $2874E,enable_border_blank
+	PL_IFC2
+	PL_ENDIF
 
 	
 	; *** pause
@@ -279,6 +312,58 @@ pl_main
 	PL_NOP	$2F116,2
 	PL_END
 	
+
+	include visual_fixes.s
+
+; Enable ECS/AGA border blanking whenever the main display is installed.
+; Both BPLCON0 copper moves must retain ECSENA, including the bottom blank.
+; BPLCON3 is write-only: retain the standard $0c00 palette-offset defaults.
+; OCS Denise does not implement these display controls.
+enable_border_blank:
+	lea $dff000,a0 ; displaced native instruction
+	move.l d0,-(a7)
+	move.l _chip_rev(pc),d0
+	andi.b #$0a,d0 ; GFXF_HR_DENISE | GFXF_AA_LISA
+	beq.b .done
+	ori.w #1,$1480.w
+	ori.w #1,$1814.w
+	move.w #$0c20,$106(a0) ; BRDRBLNK
+.done:
+	move.l (a7)+,d0
+	rts
+
+; A one-field simulation has measurable integration/collision differences.
+; Wait for one elapsed tick; the original swap waits for the following tick.
+safe_swap:
+	cmpi.b	#1,$aec0c
+public_ref_3 equ *-4
+	bcs.b	safe_swap
+	jmp	$aecba
+public_ref_4 equ *-4
+
+; Bound unusually long frames before both physics and rate calculations use d1.
+bound_delta:
+	cmpi.w	#8,d1
+	bls.b	.store
+	moveq	#8,d1
+.store:
+	move.w	d1,$a6f00
+public_ref_5 equ *-4
+	rts
+
+; Four fields per phase, independent of rendered frame rate. The original
+; ANDI.B #7 at $89d38 retains the wrap and the original condition codes.
+field_animation:
+	move.l	d0,-(a7)
+	move.l	$a5d4c,d0
+public_ref_6 equ *-4
+	lsr.l	#2,d0
+	move.b	d0,$a5990
+public_ref_7 equ *-4
+	; Original ADDQ on a phase in 0..7 always clears X; ANDI preserves X.
+	andi	#$ef,ccr
+	move.l	(a7)+,d0
+	rts
 
 FUNCTION_KEYPRESS:MACRO
 	btst	#JPB_BTN_\1,d0
@@ -306,9 +391,9 @@ test_for_pause
 	bne.b	.wr
 	
 .nopause
-	movem.l	(a7)+,d0-d2/a0
-
-	CMPI.B	#$40,(a0)		;072b4: 0c3900400002e969
+	; Compare while a0 still addresses the key; MOVEM preserves the flags.
+	cmpi.b	#$40,(a0)		; original cmpi.b #$40,$ae969
+	movem.l	(a7)+,d0-d1/a0
 	rts
 	
 menu_control_loop:
@@ -447,14 +532,48 @@ password_data:
     dc.b	"00000  01S9010EGJ  576IK"   ;DIABLO 1000
 password_data_end
 
-
-
 ; < A0: filename
 ; < A1: destination address
 ; > D0: 0 (ok)
 ; > D1: filesize (not returning that leads to strange bugs...)
 
+; Native Ice! depacker exit, including its non-packed-input path. Unlike
+; resload_LoadFile[Decrunch] and resload_Patch, this game routine does not
+; flush caches itself. Restore its saved registers before calling WHDLoad;
+; FlushCache preserves registers, and the wrapper preserves CCR and a2.
+enhanced_decrunch_done:
+	movem.l (a7)+,d0-d7/a0-a1
+	move.w sr,-(a7)
+	move.l a2,-(a7)
+	move.l _resload(pc),a2
+	jsr (resload_FlushCache,a2)
+	move.l (a7)+,a2
+	move.w (a7)+,ccr
+	rts
+
+	include public_main.s
+	include cpu_work.s
+	include blitter_queue.s
+	include bob_masks.s
+	include dirty_sky.s
+	include cpu_bobs.s
+
+ include public_loader.s
+ include public_boot.s
+ include public_iff.s
+ include public_menu.s
+ include public_recolor.s
+ include public_audio.s
+ include public_assets.s
+
 ReadSomeFile:
+ bsr public_asset_load_destination
+	; Preloaded files can arrive before the previous screen blit finishes.
+	; Finish DMA before overwriting its destination (notably DASH2.LBM).
+	tst.b	$dff002
+.wait_blitter
+	btst	#6,$dff002
+	bne.b	.wait_blitter
 	movem.l	a0-a2,-(sp)
 
 	cmp.b	#':',3(A0)	; does the name mention xxx: ??
@@ -496,7 +615,6 @@ ReadSomeFile:
 	moveq	#0,D0		; no problemo
 	movem.l	(sp)+,a0-a2
 	rts
-
 
 ; < D0: numbers of vertical positions to wait
 beamdelay
@@ -608,13 +726,76 @@ _resload	dc.l	0		;address of resident loader
 _tags
 		dc.l	WHDLTAG_CUSTOM1_GET
 _password		dc.l	0
+	dc.l	WHDLTAG_CUSTOM2_GET
+_enhanced_framerate	dc.l	0
+	dc.l WHDLTAG_CHIPREVBITS_GET
+_chip_rev dc.l 0
+	dc.l WHDLTAG_ATTNFLAGS_GET
+cpu_attention dc.l 0
 	dc.l	0
 	
 previous_button_state
 	dc.l	0
 expansion_memory:
 	dc.l	$80000
+public_ref_8 equ *-4
 	
+pl_c_simulation
+	PL_START
+; Applied only after step_select_path accepts CUSTOM2 and CPU/Fast placement.
+	PL_P $31994,raster_edge_fast
+
+	PL_PSS $9DE8,step_fused_lean,4
+	PL_IFC2
+	PL_P $3284E,enhanced_decrunch_done
+	PL_PS $712A,step_priority_end
+	PL_PS $28D26,step_priority_end
+	PL_PS $28D30,step_priority_end
+	PL_PSS $660E,step_prepare,2
+	PL_P	$747E,step_main
+	PL_P	$75B6,step_end
+	PL_P	$915A,step_camera_decay
+	PL_NOP	$76C6,6
+	PL_PSS	$A40E,step_start_sprite,2
+	PL_PS	$70DC,step_field_input
+	PL_S	$70E2,$7116-$70E2
+	PL_P	$73F4,step_input_key
+	PL_PSS	$9E0E,step_crash_sprite,2
+	PL_PS	$9E26,step_pose_clear
+	PL_NOP	$9D24,6
+	PL_NOP	$9D32,6
+	PL_PS	$A104,step_spark_test
+	PL_NOP	$A11C,6
+	PL_NOP	$9EEC,4
+	PL_P	$9E70,step_pose_lean
+	PL_P	$9EF0,step_lean_end
+	PL_P	$9F48,step_pose_project
+	PL_P $B02E,step_object_fast_code
+	PL_P $B4A4,reference_motion_begin
+	PL_P $B4D2,reference_motion_displacement
+	PL_P $10C64,step_actor_road_reactivate
+	PL_P $BABE,step_road_reference
+	PL_PS $BCD0,step_actor_road
+	PL_PSS $BDF0,step_actor_road_copy,6
+	PL_P	$B93A,step_steering_heading
+	PL_P	$B97A,step_steering_motion
+	PL_P	$B9A0,step_steering_store
+	PL_PSS $A8E2,step_predict_pose,4
+	PL_PS $75C8,step_predict_render_begin
+	PL_PS $773C,step_predict_render_end
+	PL_S	$AECC,$AEE2-$AECC
+	PL_NOP	$6FA0,6
+	PL_R	$6FE6
+	PL_NOP	$28C7C,$28C94-$28C7C
+	PL_NOP	$28C9A,$28CBC-$28C9A
+	PL_PSS	$28C4C,step_reset,4
+	PL_P	$2876C,step_stack_start
+	PL_ENDIF
+	PL_END
+
+enhanced_selected:
+	dc.l 0
+	include simulation.s
 	IFD DEBUG
 		dc.l	WHDLTAG_CUST_DISABLE,vposw
 		dc.l	WHDLTAG_CUST_DISABLE,vhposw
@@ -622,3 +803,16 @@ expansion_memory:
 	;	dc.l	WHDLTAG_CUST_DISABLE,copjmp2
 	ENDC
 		dc.l	0
+
+	include raster_edge.s
+
+	include public_refs.s
+
+ include public_boot_tables.s
+ include public_intro_index.s
+
+; Amiga Version and release tooling use the same fixed version/date as WHDLoad.
+ dc.b "$VER: RoadRash "
+ DECL_VERSION
+ dc.b 0
+ EVEN
