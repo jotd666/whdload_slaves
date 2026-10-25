@@ -1,13 +1,11 @@
 include ../../options.mk
 
 PROGNAME = RedBaron
-
-
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
 
-all :  $(WHDLOADER)
+all : $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE)
+$(WHDLOADER) : $(SOURCE) $(wildcard *.s *.i)
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)

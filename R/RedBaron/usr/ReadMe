@@ -10,10 +10,20 @@
 
  This install applies to "Red Baron" © 1992 Sierra/Dynamix.
 
- This install requires WHDLoad to be in the path. It can be found in the
+ Requirements:
+ -------------
+ This install requires WHDLoad 17 or later to be in the path. It can be found in the
  WHDLoad package.
+ XFDDecrunch must also be in the path for installation. It is available in
+ aminet:util/pack/xfdmaster.lha.
 
- The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ Install from the three DOS disks named "Red Baron #1", "Red Baron #2"
+ and "Red Baron #3", in any drive. DOS disk images can also be mounted
+ using DiskImage; the installer lists the required tools.
+ The copy-protected MFM release is not supported.
+ Installer 44.10 or later enables icon previews and drawer opening.
+
+ The tested minimum is 0.5 MB ChipMem and 2 MB FastMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  The game requires an installed A500 Kickstart 1.3 image.
@@ -26,17 +36,28 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
 
- If you have problems with this installation please try and get a newer
- version of this package from the WHDLoad WWW-Page. If that doesn't help try
- some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
+ Features:
+ ---------
+ - FastMem and CPU cache support, keyboard fixes and mission-tape saving.
+ - English and German releases supported; Manual and Keys included.
+ - Enhanced framerate (68020+Fast RAM): faster cockpit and scene drawing,
+   geometry optimizations and game speed independent of rendering framerate.
+   Applies to sim v1 only; other versions retain their existing fixes.
 
- For the full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.de/
- or	aminet:dev/misc/whdload#?
- and	aminet:game/patch/
+ Enhanced framerate is enabled in the supplied icons (CUSTOM2=1).
+ To disable all enhancements, clear the splash checkbox or set CUSTOM2=0.
+ Without the tooltype, enhancements are off.
+
+ The option preserves Time Scale. Reduce graphics detail if the game cannot
+ keep up; very slow systems can still lose simulation time.
+
+ History:
+ --------
+ version 3.0b (13.10.2026)
+ - CPU-specific rendering improvements and consistent game speed under one
+   Enhanced framerate checkbox, enabled in the supplied icons.
+ - ReadMe and installer adapted to the WHDLoad Install Template, retaining
+   JOTD's three-disk layout, executable decompression and icon choices.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported
@@ -69,3 +90,17 @@
 
  To do:
  - support the MFM version
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/

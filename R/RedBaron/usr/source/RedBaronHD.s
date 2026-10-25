@@ -2,7 +2,7 @@
 ;  :Program.	RedBaronHD.asm
 ;  :Contents.	Slave for "RedBaron"
 ;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
+;  :Original	v1
 ;  :Version.	$Id: RedBaronHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
 ;  :History.	%DATE% started
 ;  :Requires.	-
@@ -32,7 +32,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $100000 ; approved 1 MiB requirement; spare renderer workspace reserved
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -53,8 +53,7 @@ CACHE
 
 ;============================================================================
 
-
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -64,17 +63,14 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-
 DECL_VERSION:MACRO
-	dc.b	"2.1"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+	dc.b	"3.0b (13.10.2026)"
 	ENDM
+
+; CUSTOM2=1 enables enhancements; zero or omitted keeps the original paths.
+slv_config
+	dc.b "C2:B:Enhanced framerate (68020+Fast RAM);"
+	dc.b 0
 
 slv_name		dc.b	"Red Baron",0
 slv_copy		dc.b	"1992 Dynamix",0
@@ -92,7 +88,6 @@ _args		dc.b	10
 _args_end
 	dc.b	0
 
-
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	$A,$D,0
@@ -104,7 +99,9 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	bsr perf_read_options
+	bsr memory_reserve
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -127,7 +124,6 @@ _quit		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
 ; < a1: APTR seglist
-
 
 ; < a0: program name
 ; < a1: arguments
@@ -182,23 +178,26 @@ _load_exe:
 	add.l	#resload_Abort,(a7)
 	rts
 
-
 SIM_VERSION_TEST:MACRO
 	move.l	a1,a0
 	add.l	#$\1,a0
 	cmp.l	#$082A0001,(a0)
 	bne.b	.nov\2
 
+	IFEQ \2-1
+	bsr perf_install_v1
+	ENDC
 	lea	pl_sim_v\2(pc),a0
 	jsr	resload_Patch(a2)
 
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .nov\2
 	ENDM
 
 ; < D0: BSTR filename
 ; < D1: seglist
 _cb_dosLoadSeg
+	bsr sound_driver_loadseg
 	move.l	_resload(pc),a2
 
 	add.l	d1,d1
@@ -233,7 +232,7 @@ _cb_dosLoadSeg
 	move.l	#$4E714EB9,(a0)+
 	pea	flushit(pc)
 	move.l	(A7)+,(a0)+
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .noredbaron:
 
 	move.l	d6,a0
@@ -255,7 +254,7 @@ _cb_dosLoadSeg
 	; ps, v1
 	lea	pl_ps_v1(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 .nops_v1
 	move.l	a1,a0
 	add.l	#$2AEF6,a0
@@ -265,7 +264,7 @@ _cb_dosLoadSeg
 	; ps, v2
 	lea	pl_ps_v2(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 
 .nops_v2
 	move.l	a1,a0
@@ -276,7 +275,7 @@ _cb_dosLoadSeg
 	; ps, v3
 	lea	pl_ps_v3(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 
 .nops
 	move.l	d6,a0
@@ -294,9 +293,8 @@ _cb_dosLoadSeg
 	SIM_VERSION_TEST	A5A8,2
 	SIM_VERSION_TEST	A5CC,3
 .nosim
-.out
+cb_loadseg_done
 	rts
-
 
 pl_sim_v1
 	PL_START
@@ -311,7 +309,6 @@ pl_ps_v1
 	PL_PS	$2B36A,kb_delay
 	PL_END
 
-
 pl_sim_v2
 	PL_START
 	PL_PS	$A5A8,patch_bittest
@@ -325,7 +322,6 @@ pl_ps_v2
 	PL_PS	$2AEF6,kb_delay
 	PL_END
 
-
 pl_sim_v3
 	PL_START
 	PL_PS	$A5CC,patch_bittest
@@ -338,7 +334,6 @@ pl_ps_v3
 	PL_START
 	PL_PS	$2BEA6,kb_delay
 	PL_END
-
 
 kb_delay:
 ;;	move.b	#$f0,$bfec01	; useless
@@ -370,19 +365,19 @@ rename_file
 	move.l	$4.W,a6
 	moveq	#0,d1
 	jsr	_LVOAllocMem(a6)
-	
+
 	move.l	d0,a3	; temp buffer for copy
 	move.l	a3,a1
 	move.l	d4,a0	; source name
 	jsr	resload_LoadFile(a2)
 
 	move.l	a3,a1	; temp buffer for copy
-	move.l	d2,a0	
+	move.l	d2,a0
 	jsr	resload_SaveFile(a2)
 
 	move.l	d4,a0
 	jsr	resload_DeleteFile(a2)
-	
+
 	move.l	a3,a1
 	move.l	d3,d0
 	jsr	_LVOFreeMem(a6)
@@ -420,7 +415,6 @@ flushit:
 	bsr	_flushcache
 	rts
 
-
 PATCH_DOSLIB_OFFSET:MACRO
 	movem.l	d0-d1/a0-a1,-(a7)
 	move.l	A6,A1
@@ -440,7 +434,7 @@ PATCH_DOSLIB_OFFSET:MACRO
 	ext.l	D0
 	move.l	D0,(A0)		; moves to d0_value_xxx
 
-	move.w	#$4EF9,(A1)+	
+	move.w	#$4EF9,(A1)+
 	pea	new_\1_init(pc)
 	move.l	(A7)+,(A1)+
 	bra.b	end_patch_\1
@@ -501,3 +495,73 @@ new_DeleteFile:
 	dc.b	"sim.out",0
 	dc.b	"simprefs.prf",0
 	dc.b	0
+
+	even
+	include "cpu-cache.s"
+	include "memory.s"
+	include "perf.s"
+	include "mirror.s"
+	include "mirror-cache.s"
+	include "projection.s"
+	include "dot.s"
+	include "clip.s"
+	include "vertex.s"
+	include "face.s"
+	include "fill.s"
+	include "pacing.s"
+	include "sound-sequence.s"
+	include "sound-driver.s"
+	include "time-core.s"
+	include "time-input.s"
+	include "time-buffers.s"
+	include "time-input-owner.s"
+	include "time-loop.s"
+	include "time-pause.s"
+	include "time-keys.s"
+	include "time-devices.s"
+	include "time-mouse.s"
+	include "time-rate.s"
+	include "time-message.s"
+	include "time-camera.s"
+	include "time-compress.s"
+	include "time-auto-menu.s"
+	include "time-present-core.s"
+	include "time-present-state.s"
+	include "time-present-model.s"
+	include "time-poses.s"
+	include "time-pose-blend.s"
+	include "time-render.s"
+	include "time-terrain.s"
+	include "time-flags.s"
+	include "instrument-values.s"
+	include "instrument-pixels.s"
+	include "instrument-cache.s"
+	include "gauge-fast.s"
+	include "overlay-lifetime.s"
+	include "overlay-mask.s"
+	include "overlay-key.s"
+	include "overlay-cache-key.s"
+	include "overlay-native-mask.s"
+	include "artwork-sparse.s"
+	include "artwork-cache.s"
+	include "artwork-solid.s"
+	include "artwork-front.s"
+	include "page-fence.s"
+	include "cockpit-fast.s"
+	include "scene-frame.s"
+	include "scene-delta.s"
+	include "scene-primitives.s"
+	include "polygon-span.s"
+	include "scene-raster.i"
+	include "scene-raster-fast.i"
+	include "scene-compat.i"
+	include "time-scenery.s"
+
+; Contiguous pointer cells used by time_buffers_allocate; keep this order.
+time_present_cache_buffer_ptr: dc.l 0
+time_model_buffer_ptr: dc.l 0
+time_present_list_buffer_ptr: dc.l 0
+time_pose_current_ptr: dc.l 0
+time_pose_previous_ptr: dc.l 0
+time_blend_output_ptr: dc.l 0
+time_input_observe_queue_ptr: dc.l 0
