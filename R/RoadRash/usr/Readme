@@ -12,7 +12,7 @@
 
  Requirements:
  -------------
- WHDLoad 17.2 or newer must be installed in the path.
+ WHDLoad 19 or newer must be installed in the path.
  The installed program requires 1 MB ChipMem and memory for WHDLoad and the
  slave. Enhanced framerate uses an optional 564 KB OtherMem allocation;
  Fast RAM and a 68020 or faster are recommended. PRELOAD needs additional
@@ -91,7 +91,7 @@ Source: GameWinners.com ,  http://www.gamewinners.com
 
  History:
  --------
- Version 3.0b (22.10.2026):
+ Version 3.0 (22.10.2026) done by Versuri/JOTD:
  - optional Enhanced framerate for smoother, vsynced play on Fast RAM Amigas
  - consistent simulation speed on the accelerated path, with reduced visible
    steering lag and corrected opponent lane occupancy
@@ -100,7 +100,8 @@ Source: GameWinners.com ,  http://www.gamewinners.com
  - fixed a loading crash on uncached 68030 machines
  - blanked the border during play on ECS/AGA machines
  - updated installer; cancelling replacement preserves an existing installation
-
+ - adapted to whdload ReadJoyPad routine
+ 
  Version 2.0 (18.08.2019) done by JOTD:
  - adapted to whdload v17
  - joypad support (issue #0003626)

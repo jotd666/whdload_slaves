@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 5.2 (24.10.2026):
+ - faster drawing and other optimizations from 5.1 bugfixed. And rendered optional
+   not default. Turn them on with CUSTOM5=16 bit (or splash screen)
+ 
  version 5.1 (17.10.2026) done by Vesuri:
  - faster drawing, background restoration, room construction and game logic,
    aimed at improving Amiga 500 performance

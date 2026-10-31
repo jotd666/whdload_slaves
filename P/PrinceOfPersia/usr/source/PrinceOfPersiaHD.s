@@ -84,7 +84,7 @@ _expmem
 ;============================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"5.1"
+	dc.b	"5.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -109,6 +109,7 @@ _name		dc.b	"Prince Of Persia"
     dc.b 0
 _copy		dc.b	"1990 Jordan Mechner/Broderbund",0
 _info		dc.b	"adapted & fixed by JOTD & Harry",10,10
+		dc.b	"further draw optimizations by Versuri",10
 		dc.b	"Thanks to Wepl for savegame system",10
 		dc.b	"Thanks to Hexaae for testing & bug reports",10,10
 		dc.b	"Version "
@@ -123,12 +124,10 @@ _config
 		dc.b    "C2:X:second button jumps:0;"
 		dc.b    "C2:X:up disabled:1;"
 		dc.b    "C3:B:Save from any level;"
-	IFD	VERIFY
-		dc.b    "C5:X:Use original drawing routines;4"
-	ENDC
+		dc.b    "C5:X:Use optimized drawing routines:4;"
 		dc.b	0
 		
-		dc.b	"$VER: PrinceOfPersia "
+		dc.b	"$VER: Prince Of Persia "
 		DECL_VERSION
 		dc.b	0
 		even

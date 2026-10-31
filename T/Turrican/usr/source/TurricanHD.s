@@ -93,7 +93,7 @@ RND_STOPOFF	= $22
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	18			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError		;ws_Flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -148,14 +148,18 @@ DECL_VERSION:MACRO
 _name		dc.b	"Turrican",0
 _copy		dc.b	"1990 Rainbow Arts/Innerprise",0
 _info		dc.b	"Installed by Wepl",10
+		dc.b	10,"Improved by JOTD & Arise from Decay",10,10
 		dc.b	"Version "
 		DECL_VERSION
-		dc.b	10,"Trainer improved by Arise from Decay"
 		dc.b	0
 _dir		dc.b	"data",0
 _main		dc.b	"main",0
 _60000		dc.b	"60000",0
 _highsname	dc.b	"highs",0
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+
 	EVEN
 	include ReadJoyPad.s
 

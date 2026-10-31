@@ -59,7 +59,8 @@
 	Version 2.2 (2026-10-10) by Arise from Decay
 	- trainer improved: all levels selectable now, added wheels and energy
 	- lives after final boss get subtracted now (issue #07027)
-
+    - adapted to whdload 19
+	
 	Version 2.1 (2021-04-07) by JOTD:
 	- jump with second button
 	- level & sublevel select (issue #0005041)

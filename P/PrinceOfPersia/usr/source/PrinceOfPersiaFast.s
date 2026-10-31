@@ -1,7 +1,7 @@
 ;*---------------------------------------------------------------------------
 ;  :Contents.	A500 speed-ups for all supported Prince of Persia versions.
 ;		Performance analysis and development notes are kept locally.
-;		CUSTOM5 bit OPT_ORIGINAL turns them all off, for A/B comparisons.
+;		CUSTOM5 bit OPT_ORIGINAL turns them all on, for A/B comparisons.
 ;---------------------------------------------------------------------------*
 
 OPT_ORIGINAL = 4
@@ -9,7 +9,6 @@ OPT_ORIGINAL = 4
 pl_fast_v1
 	PL_START
 	PL_IFC5X	OPT_ORIGINAL
-	PL_ELSE
 	; C1: synchronous polling replaces STOP and the per-blit interrupt
 	PL_P	$053a2,fast_blit_c
 	PL_P	$053d6,fast_blit

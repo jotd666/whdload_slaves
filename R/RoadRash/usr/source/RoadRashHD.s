@@ -46,8 +46,19 @@ _expmem
 
 ;============================================================================
 
+	IFD BARFLY
+	DOSCMD	"WDate  >T:date"
+	ENDC
 DECL_VERSION:MACRO
-	dc.b	"3.0b (22.10.2026)"
+	dc.b	"3.0"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
 
 _name		dc.b	"Road Rash",0
@@ -287,9 +298,9 @@ pl_messages_main
 
 pl_main
 	PL_START
+	PL_IFC2
 	PL_P $9E2C,visual_actor_visibility
 	PL_PS $2874E,enable_border_blank
-	PL_IFC2
 	PL_ENDIF
 
 	
