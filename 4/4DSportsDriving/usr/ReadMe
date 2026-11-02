@@ -10,10 +10,11 @@
 
  This install applies to "4D Sports Driving" © 1992 Mindscape
 
- This install requires WHDLoad to be in the path. It can be found in the
- WHDLoad package.
+ This install requires WHDLoad 17.0 or newer to be in the path. It can be found
+ in the WHDLoad package.
 
- The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ The game and simulation workspace require 0.5 MB ChipMem and 676 KiB
+ OtherMem, plus Kickstart/WHDLoad overhead.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  The game requires an installed A500 Kickstart 1.3 image.
@@ -37,6 +38,29 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ Options:
+ - Enable "Enhanced framerate" on the WHDLoad splash screen for faster drawing.
+   The CPU renderer requires a 68020 or faster processor and Fast RAM.
+ - Press CTRL-G in the game to choose graphics detail and simulation mode.
+   Simulation changes are saved and take effect on the next race.
+ - Experimental A4000 mode is PAL-only. It is selected automatically on
+   68040/68060 systems unless you have saved a different choice.
+   Other systems default to Normal (68000/68010) or A2500 (68020/68030).
+ - Advanced tooltypes: CUSTOM2=0 uses original drawing (default), CUSTOM2=1
+   enables all rendering enhancements, CUSTOM2=2 enables only the CPU renderer.
+   CUSTOM3=1 restores original simulation timing and disables A4000 mode.
+   To disable rendering and simulation enhancements, use CUSTOM2=0 CUSTOM3=1.
+
+ version 2.0b (13.10.2026) - enhancements by Vesuri:
+ - Fixed the flickering blue background in the DSI intro.
+ - Faster rendering with a single "Enhanced framerate" option.
+ - Correct game speed and race timing regardless of rendering speed.
+ - Experimental A4000 simulation for smoother, more responsive driving on
+   faster PAL Amigas, selected by default on 68040/68060 systems.
+ - Automatic simulation defaults and saved simulation preferences.
+ - Replay saving and playback for A4000 mode; original replays remain supported.
+ - A4000 jumps are closer to A2500; older A4000 replays are incompatible.
 
  version 1.2 (21.03.2021) done by JOTD:
  - long delay when ending a race removed (side effect
