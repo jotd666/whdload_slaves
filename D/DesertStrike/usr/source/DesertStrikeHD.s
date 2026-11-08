@@ -77,13 +77,11 @@
 
 
 		INCDIR  Include:
-		INCDIR  Includes:
 		INCLUDE whdload.i
 		INCLUDE	whdmacros.i
 
 		IFD BARFLY
 		OUTPUT  DesertStrike.slave
-		OUTPUT  hd2:util/dev/whdload/desertstrike/DesertStrike.slave
 		BOPT	O+				;enable optimizing
 		BOPT	OG+				;enable optimizing
 		BOPT	ODd-	               		;disable mul optimizing
@@ -107,9 +105,23 @@ EXPMEMSIZE = $80000
 
 base
                 SLAVE_HEADER            	;ws_Security + ws_ID
+                dc.w    19              	;ws_Version
+                dc.w    WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoDivZero    ;ws_flags
+                dc.l    CHIPMEMSIZE    	     	;ws_BaseMemSize can't use fast memory would have to be 24 bit memory
+                dc.l    0               	;ws_ExecInstall
+                dc.w    _start-base      	;ws_GameLoader
+                dc.w    0                       ;ws_CurrentDir
+                dc.w    0               	;ws_DontCache
 _keydebug       dc.b    $58             	;ws_keydebug = F9
 _keyexit        dc.b    $5d             	;ws_keyexit = * keypad
 _expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
+                dc.w    _name-base      	;ws_name
+                dc.w    _copy-base      	;ws_copy
+                dc.w    _info-base      	;ws_info
+                dc.w	0                       ;ws_kickname
+                dc.l	0                       ;ws_kicksize
+                dc.w	0                       ;ws_kickcrc
+                dc.w	_config-base		;ws_config
 
 ;======================================================================
 
@@ -136,6 +148,8 @@ _info           dc.b    "by JOTD & Abaddon since 1996",10,10
 				dc.b	"Alt CD32 controls: Red=cannon, Blue=hydra",10
 				dc.b	"Green=hellfire, Yellow/Play=status",10,10
 		dc.b    "Version "
+                DECL_VERSION
+                dc.b    0
 	dc.b	0
 	dc.b	"$","VER: slave "
 	DECL_VERSION
@@ -146,12 +160,12 @@ _config
         dc.b    "C1:X:Trainer Infinite Lives:0;"
         dc.b    "C1:X:Trainer Infinite Energy:1;"
         dc.b    "C1:X:Trainer Infinite Weapons:2;"
-		dc.b    "C1:X:Trainer Infinite Lives:0;"
-		dc.b	"C1:X:Trainer Infinite Armor:1;"
-		dc.b    "C1:X:Trainer Infinite Fuel:2;"
-		dc.b    "C1:X:Trainer Infinite Weapons:3;"
-		dc.b	"C1:X:Trainer Infinite Load:4;"
 		dc.b    "C2:L:Select Starting Level:Air Superiority,Scud Buster,Embassy City,Nuclear Storm,The End;"
+        dc.b    "C3:B:Disable Blitter Patches;"
+        dc.b    "C4:B:Enable alternate CD32 Joypad controls;"
+        dc.b    "C5:B:Skip Intro;"
+        dc.b    0
+        even
 
 ;======================================================================
 _start   ;       A0 = resident loader
@@ -518,28 +532,17 @@ _PL_MAIN	PL_START
 		PL_W		$7cba,$6046			; Infinite Lives $98362
 		PL_ENDIF
 		PL_IFC1X	1
-		PL_PS		$6cc,_PatchTrainer	; Infinite Armor
-		PL_ENDIF
-		PL_IFC1X	2
 		PL_NOP		$dde,6				; Infinite Fuel 98356
 		PL_ENDIF
 		;PL_NOP		$ac70,400			; Infinite Power f6e36 - sub @ 8AC7E
 		PL_IFC1X	2
-		PL_IFC1X	3
 		PL_B		$d5f4,$60			; Infinite ammo (Hellfire Missiles f7088)
 		PL_ENDIF
 		
 		PL_IFC1
 		; enabled if a trainer option is set (why?)
 		PL_PS		$6cc,_PatchTrainer
-		PL_IFC1X	4
-		PL_W		$e304,$6000			; Infinite Load (cmpi.w #6, blt.w => bra.w)
 		PL_ENDIF
-
-		;PL_IFC1
-		; enabled if a trainer option is set (why?) -AriseFromDecay: Game has inbuild infine armor cheat (HARDCASE as password)
-	; which sets bit 2 at $174bc. This routine should do the job.
-		;PL_ENDIF
 		PL_PS		$9888,_CD32_Read1		; *** CD32 Joypad - Main Screen - Abaddon
 
 		PL_IFC4 					; If not null enable CD32 joypad-style controls
@@ -742,6 +745,7 @@ dbf_fix:
 	move.w	#4,d0	; $12C DBF, usually soundtracker
 .bd_loop1
 	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
 .bd_loop2
 	cmp.b	$dff006,d0
 	beq.s	.bd_loop2
@@ -754,6 +758,7 @@ dbf_fix_d7:
 	move.w	#6,d7	; $12C DBF, usually soundtracker
 .bd_loop1
 	move.w  d7,-(a7)
+    move.b	$dff006,d7	; VPOS
 .bd_loop2
 	cmp.b	$dff006,d7
 	beq.s	.bd_loop2
@@ -765,6 +770,7 @@ dbf_fix_d6:
 	move.w	#6,d6	; $12C DBF, usually soundtracker
 .bd_loop1
 	move.w  d6,-(a7)
+    move.b	$dff006,d6	; VPOS
 .bd_loop2
 	cmp.b	$dff006,d6
 	beq.s	.bd_loop2
@@ -817,7 +823,6 @@ _PatchTrainer
 		move.l		_Custom1(pc),d0
 		beq		.skip
 		move.b		#$5,d3
-		bset	  #2,d3				; bset #2 instead of move #$5, so ingame movie sequences play
 .skip		move.l		_expmem(pc),a0
 		add.l		#$17b4c,a0		; $97b4c
 		move.b 		d3,(a0)
@@ -1212,20 +1217,29 @@ _currdisk	dc.w	0
 _resload	dc.l	0
 _Tags           dc.l    WHDLTAG_CUSTOM1_GET
 _Custom1	dc.l    0
+         	dc.l    WHDLTAG_CUSTOM2_GET
 _start_level	dc.l    0
+         	dc.l    WHDLTAG_CUSTOM3_GET
 _Custom3	dc.l    0
+         	dc.l    WHDLTAG_CUSTOM4_GET
 _alt_cd32_controls	dc.l    0
+         	dc.l    WHDLTAG_CUSTOM5_GET
 _Custom5	dc.l    0
  		dc.l    WHDLTAG_BUTTONWAIT_GET
 _ButtonWait	dc.l    0
+                dc.l    TAG_DONE
 
 ;======================================================================
 
 
 _quit     pea     TDREASON_OK
+          bra     _end
 _debug    pea     TDREASON_DEBUG
+          bra     _end
 _wrongver pea     TDREASON_WRONGVER
 _end      move.l  (_resload,pc),-(a7)
+          add.l   #resload_Abort,(a7)
+          rts
 _ammo_type
 	dc.l	0
 heli_struct_address
@@ -1233,3 +1247,4 @@ heli_struct_address
 	
 ;======================================================================
 
+        END
