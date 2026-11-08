@@ -49,16 +49,18 @@
 
  With a third button joystick:
  
-     second button          - switches weapons
 	 third button 			- Bring Up Map Screen/Exit Map screen
 	 
  If CUSTOM4 is not set, the controls stick to "classic" with extras:
  
-    Blue / Forward: changes weapon (original game only used blue/2nd button)
  
  History:
  --------
  
+ Version 4.3 (08.11.2026) done by Arise from Decay:
+ - trainer imprved, option for load added
+ - ingame movie sequences now working with trainer enabled
+
  Version 4.2 (26.11.2024) done by JOTD:
  - adapted to whdload v19
  
@@ -164,4 +166,3 @@
  - add support to automatic password entry in other version
  - blitter glitches/flashes in some parts
 
- 
