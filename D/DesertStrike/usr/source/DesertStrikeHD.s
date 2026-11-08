@@ -40,6 +40,11 @@
 ;		 - Removed division by 0 after first intro
 ;        - JOTD: added automatic joypad detection
 ;        - JOTD: finalized installation package (Abaddon didn't release the latest version)
+;		 - Arise from Decay: Trainer improved -
+;			Ingame movie sequences play now when custom 1 is set
+;			Custom labels corrected (Fuel/Energy)
+;			Now player wont have unlimited armor if ANY custom 1 is set
+;			Added Trainer for load, now you can rescue as many people as you want at once
 
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
@@ -126,7 +131,7 @@ _expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"4.2"
+	dc.b	"4.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -142,11 +147,12 @@ _name           dc.b    "Desert Strike - Return to the Gulf"
 		ENDC
 				dc.b	0
 _copy           dc.b    "1993 Electronic Arts",0
-_info           dc.b    "by JOTD & Abaddon since 1996",10,10
+_info           dc.b    "by JOTD & Abaddon since 1996",-1
 				dc.b	"CD32 controls: Blue=change weapon",10
-				dc.b	"Yellow/Play=status",10,10
+				dc.b	"Yellow/Play=status",-1
 				dc.b	"Alt CD32 controls: Red=cannon, Blue=hydra",10
-				dc.b	"Green=hellfire, Yellow/Play=status",10,10
+				dc.b	"Green=hellfire, Yellow/Play=status",-1
+				dc.b	"Trainer improved by Arise from Decay",-1
 		dc.b    "Version "
                 DECL_VERSION
                 dc.b    0
@@ -157,14 +163,16 @@ _info           dc.b    "by JOTD & Abaddon since 1996",10,10
 
 _config
 		dc.b    "BW;"
-        dc.b    "C1:X:Trainer Infinite Lives:0;"
-        dc.b    "C1:X:Trainer Infinite Energy:1;"
-        dc.b    "C1:X:Trainer Infinite Weapons:2;"
+		dc.b    "C1:X:Trainer Infinite Lives:0;"
+		dc.b	"C1:X:Trainer Infinite Armor:1;"
+		dc.b    "C1:X:Trainer Infinite Fuel:2;"
+		dc.b    "C1:X:Trainer Infinite Weapons:3;"
+		dc.b	"C1:X:Trainer Infinite Load:4;"
 		dc.b    "C2:L:Select Starting Level:Air Superiority,Scud Buster,Embassy City,Nuclear Storm,The End;"
-        dc.b    "C3:B:Disable Blitter Patches;"
-        dc.b    "C4:B:Enable alternate CD32 Joypad controls;"
-        dc.b    "C5:B:Skip Intro;"
-        dc.b    0
+		dc.b    "C3:B:Disable Blitter Patches;"
+		dc.b    "C4:B:Enable alternate CD32 Joypad controls;"
+		dc.b    "C5:B:Skip Intro;"
+		dc.b    0
         even
 
 ;======================================================================
@@ -532,17 +540,19 @@ _PL_MAIN	PL_START
 		PL_W		$7cba,$6046			; Infinite Lives $98362
 		PL_ENDIF
 		PL_IFC1X	1
+		PL_PS		$6cc,_PatchTrainer	; Infinite Armor
+		PL_ENDIF
+		PL_IFC1X	2
 		PL_NOP		$dde,6				; Infinite Fuel 98356
 		PL_ENDIF
 		;PL_NOP		$ac70,400			; Infinite Power f6e36 - sub @ 8AC7E
-		PL_IFC1X	2
+		PL_IFC1X	3
 		PL_B		$d5f4,$60			; Infinite ammo (Hellfire Missiles f7088)
 		PL_ENDIF
-		
-		PL_IFC1
-		; enabled if a trainer option is set (why?)
-		PL_PS		$6cc,_PatchTrainer
+		PL_IFC1X	4
+		PL_W		$e304,$6000			; Infinite Load (cmpi.w #6, blt.w => bra.w)
 		PL_ENDIF
+
 		PL_PS		$9888,_CD32_Read1		; *** CD32 Joypad - Main Screen - Abaddon
 
 		PL_IFC4 					; If not null enable CD32 joypad-style controls
@@ -822,7 +832,7 @@ _PatchTrainer
 		movem.l		d0/a0,-(sp)
 		move.l		_Custom1(pc),d0
 		beq		.skip
-		move.b		#$5,d3
+		bset	  #2,d3				; bset #2 instead of move #$5, so ingame movie sequences play
 .skip		move.l		_expmem(pc),a0
 		add.l		#$17b4c,a0		; $97b4c
 		move.b 		d3,(a0)
