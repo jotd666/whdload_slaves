@@ -48,7 +48,6 @@ NUMDRIVES	= 1
 WPDRIVES	= %0000
 
 ;DISKSONBOOT
-DOSASSIGN
 ;INITAGA
 HDINIT
 IOCACHE		= 10000
@@ -87,8 +86,7 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-assign
-	dc.b	"bd",0
+
 
 slv_name		dc.b	"KC Munchkin"
 	IFD	CHIP_ONLY
@@ -151,21 +149,9 @@ _bootdos
         movem.l (a7)+,a6
         ENDC
 
-    
-	;assigns
-		lea	assign(pc),a0
-		sub.l	a1,a1
-		bsr	_dos_assign
 
-   ;move.l  disable_speed_regulation(pc),d0
-   ;bne.b   .skipvbl
-   ;; install vbl hook which counts vblank
-   ;; and also reads controllers
-   ;    lea old_level3_interrupt(pc),a0
-   ;    move.l  $6C.W,(a0)
-   ;    lea new_level3_interrupt(pc),a0
-   ;    move.l  a0,$6C.W
-.skipvbl
+
+
 	;load exe
 		lea	program(pc),a0
 		lea	args(pc),a1
@@ -189,19 +175,6 @@ patch_main
 .skip
 	rts
 
-new_level3_interrupt
-    movem.l d0/a0,-(a7)
-    move.w  _custom+intreqr,d0
-    btst    #5,d0
-    beq.b   .novbl
-    ; add to counter
-    lea vbl_counter(pc),a0
-    addq.w  #1,(a0)
-.novbl
-    movem.l (a7)+,d0/a0
-    move.l  old_level3_interrupt(pc),-(a7)
-    rts
-
 
         
 ; apply on SEGMENTS
@@ -209,42 +182,6 @@ pl_main
     PL_START
 
     PL_END
-    
-dma_wait_000f
-    MOVE.W	#$000f,dmacon(A0)		;: 317c000f0096
-    bra soundtracker_loop
-
-dma_wait_d0_bis
-	MOVE.W	D0,dmacon(A0)		;13096: 31400096
-	MOVEQ	#3,D1			;1309a: 7203
-    bra soundtracker_loop
-dma_wait_d1
-    MOVE.W  D1,_custom+dmacon               ;: 33c000dff096
-    bra soundtracker_loop
-dma_wait_d4
-    MOVE.W  D4,_custom+dmacon               ;: 33c000dff096
-    bra soundtracker_loop
-dma_wait_d7
-    MOVE.W  D7,_custom+dmacon               ;: 33c000dff096
-    bra soundtracker_loop
-    
-dma_wait_d0
-    MOVE.W  D0,_custom+dmacon               ;: 33c000dff096
-soundtracker_loop
-	move.w  d0,-(a7)
-	move.w	#4,d0
-.bd_loop1
-	move.w  d0,-(a7)
-    move.b	$dff006,d0	; VPOS
-.bd_loop2
-	cmp.b	$dff006,d0
-	beq.s	.bd_loop2
-	move.w	(a7)+,d0
-	dbf	d0,.bd_loop1
-	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
-	move.w	(a7)+,d0
-	rts 
-        
     
 get_version:
 	movem.l	d1/a0/a1,-(a7)
@@ -355,12 +292,10 @@ tagseg
 segments:
 		dc.l	0
 		dc.l	0
-old_level3_interrupt
-    dc.l    0
+
 game_address
     dc.l    0
-vbl_counter
-    dc.w    0
+
 ;============================================================================
 
 	END

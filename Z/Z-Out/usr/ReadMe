@@ -28,10 +28,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 3.6
+ version 3.6 (15.11.2026) done by JOTD:
  - added CD32 pad controls to move pods around like cursor keys
  - fixed typos in the manual
- - TODO: fix "write protection" on highscore!!!
+ - autodetect AGA to fix advantec logo only in that case
  
  version 3.5 (01.05.2018):
  - added automatic CD32 joypad detection, which enables extra pad controls for player 1:
@@ -98,4 +98,5 @@ Cheats (thanks LemonAmiga):
 Level select	Hold J and press 1 to 8
 Stage select	[Keypad 1] to [Keypad 3], well too bad for A600s :)
 Unlimited lives	J + I  (as J + K doesn't work on A1200)
+
 

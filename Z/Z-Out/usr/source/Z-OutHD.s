@@ -9,12 +9,17 @@
 ;  :Translator.	Barfly
 ;  :Special changes. Instead of J+K now J+I switches invulnerability
 ;;  :To Do.	access fault fix (acc. to Jeff, but ??where??)
+
+; some game tweaks
+; W $0006AF0C $4E71 => no in-game music
+; W $2CBE2 $4E75 => no menu music
+; $83a8.W: level global X position (scrolling)
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
-;	INCLUDE own/jst.i
+	INCLUDE	graphics/gfxbase.i
 
 
 	IFD BARFLY
@@ -35,7 +40,7 @@
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	17		;ws_Version
+		dc.w	19		;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem	;ws_flags
 		dc.l	$80000;+$1000		;ws_BaseMemSize
 ;		dc.l	$100000;+$1000		;ws_BaseMemSize
@@ -54,6 +59,7 @@ _expmem		dc.l	0;$1000;+$10000	;ws_ExpMem
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
 
+; TODO: fix "write protection" on highscore!!!
 
 _config
         dc.b    "C1:X:Start with autofire on:0;"
@@ -64,7 +70,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.5"
+	dc.b	"3.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -94,6 +100,16 @@ _info	dc.b	'Installed & fixed by JOTD/Harry',10,10
 	CNOP 0,2
 
 _fmem	dc.l	0
+
+DO_ZBASE_PATCH:MACRO
+	movem.l	d0-d1/a0-a2,-(a7)
+	lea	\1(pc),a0
+	move.l	_resload(pc),a2
+	sub.l	a1,a1
+	jsr	resload_Patch(a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	ENDM
+
 ;======================================================================
 Start	;	A0 = resident loader
 ;======================================================================
@@ -109,13 +125,6 @@ Start	;	A0 = resident loader
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
 
-		bsr	_detect_controller_type	
-
-		move.l	#$110,$4.w
-		move.l	4.w,a0			;set ram sizes:
-		move.l	#0,$4e(a0)		;no fastmem
-		move.l	#$80000,$3e(a0)		;0.5MB chip
-
 		lea	tags(pc),a0
 		move.l	_resload(pc),a2
 		jsr	resload_Control(a2)
@@ -130,6 +139,103 @@ Start	;	A0 = resident loader
 		add.l	#resload_Abort,(a7)
 		rts
 .dspok
+
+
+		bsr	_detect_controller_types	
+
+        ; check if MFM version (newly supported)
+		lea	$75000,A0		;bootloader
+		move.l	#0,D0
+		move.l	#$1400,D1
+		moveq	#1,D2
+		bsr.w	_LoadDisk
+		lea	$75000,A0		;bootloader
+		move.l	#$1400,D0
+        move.l  _resload(pc),a2
+        jsr (resload_CRC16,a2)
+        cmp.w   #$3784,d0
+        bne   mustbedostrack
+        lea $4.W,a0
+        move.l  #$80000,(a0)+   ; chip 512k
+        clr.l   (a0)    ; no expansion
+        
+        sub.l   a1,a1
+        lea pl_mfm_boot(pc),a0
+        jsr (resload_Patch,a2)
+        
+        ; skip some shit
+        move.w  #$7FFF,$DFF09A
+        lea $80000,A7
+        LEA	$DFF000,A6
+        ; set values
+        pea patch_500(pc)
+        jmp $75080
+
+patch_500:
+;		pea	Fix7855C(pc)		;set trapvectors $e + $f
+;		move.l	(a7)+,$b8.W
+;		pea	JMP24To32(pc)
+;		move.l	(a7)+,$bc.W
+
+		move.l	#$ffff,d7
+
+		; fix a few DBF D0 and other DBF Dx (sound issues)
+		lea	$500.W,A0
+		lea	$50000,A1
+		bsr	_dbffix
+
+		move.b	controller_joypad_1(pc),d0
+		beq.b	.nojoy
+		; no need to patch for extra buttons if no joypad connected
+		; since 2nd button is already supported for normal joystick
+		DO_ZBASE_PATCH	pl_joypad
+		
+.nojoy
+		DO_ZBASE_PATCH	pl_main_v2
+
+
+    jmp $500
+    
+pl_mfm_boot
+    PL_START
+    ; same zero page memory config
+    ; (protection?)
+    PL_L    $200,$00D47CE8
+    PL_L    $204,$00075614
+    PL_L    $208,$1333784B
+    PL_L    $20C,$0AB41FCB
+    
+    PL_L    $250,$FFFFFFFF
+    PL_L    $254,$FFFFFFFF
+    
+    
+    PL_NOP  $75146,6
+    PL_PS   $75174,read_mfm_boot_tracks
+    PL_S    $7517A,$75448-$7517A
+    PL_END
+
+MFM_TRACK_SIZE = $157C
+MFM_MAIN_TRACK_SIZE = $1810
+
+
+read_mfm_boot_tracks:
+    lea	$500,A0		;bootloader
+    ; reads tracks 155 to 161 (yeah, up to track 81 head 1)
+    move.l	#MFM_MAIN_TRACK_SIZE*155+$1600,D0
+    move.l	#MFM_TRACK_SIZE*6,D1
+    moveq	#1,D2
+    bsr.w	_LoadDisk
+    move.l  #$A2,d0     ; original stores this value in 7544E
+    move.l  #$250,$258.W
+    rts
+
+mustbedostrack        
+        ; standard track version, IPF
+		move.l	#$110,$4.w
+		move.l	4.w,a0			;set ram sizes:
+		move.l	#0,$4e(a0)		;no fastmem
+		move.l	#$80000,$3e(a0)		;0.5MB chip
+
 	IFEQ	1
 		lea	$30000,A0		;bootloader, load just for fun
 		move.l	#0,D0
@@ -168,24 +274,14 @@ Prepare1
 		move.l	(A7)+,a0
 		jmp	$40000
 
-DO_ZBASE_PATCH:MACRO
-	movem.l	d0-d1/a0-a2,-(a7)
-	lea	\1(pc),a0
-	move.l	_resload(pc),a2
-	sub.l	a1,a1
-	jsr	resload_Patch(a2)
-	movem.l	(a7)+,d0-d1/a0-a2
-	ENDM
 	
 	include 	dbffix.s
-	include		ReadJoyButtons.s
+	include		ReadJoyPad.s
 	
 PrepareMain
 ;#!
 ;.333		bra.s	.333
 
-		pea	PrepIntro(pc)
-		move.l	(a7)+,$5da.W
 		pea	Fix7855C(pc)		;set trapvectors $e + $f
 		move.l	(a7)+,$b8.W
 		pea	JMP24To32(pc)
@@ -206,8 +302,7 @@ PrepareMain
 		DO_ZBASE_PATCH	pl_joypad
 		
 .nojoy
-		DO_ZBASE_PATCH	pl_main
-
+		DO_ZBASE_PATCH	pl_main_v1
 
 		jmp	$500.W
 
@@ -224,16 +319,17 @@ pl_joypad
 	; 1A38: code for ESC	
 	PL_END
 	
-pl_main
+pl_main_v1
 	PL_START
-
 	PL_P	$71d2,_LoadOneSec
-		
-	PL_W	$7210,$601E
-	PL_W	$71AE,$6006		; switch drive light off during play
-
-	PL_PS	$5E4,new_game_init		; sets autofire on, detects controller again...
-	
+	;;PL_W	$7210,$601E
+	PL_S	$71A6,$10		; switch drive light off during play
+    PL_NEXT pl_main_common
+    
+pl_main_common:
+    PL_START
+    PL_PS   $5D8,PrepIntro   
+	PL_PS	$5E4,new_game_init		; sets autofire on, detects controller again..
 	PL_PS	$776,FixAccessFaults
 
 	; trap #F
@@ -259,9 +355,33 @@ pl_main
 	PL_W	$3E5A,$14
 	PL_W	$3E60,$14
 	
+	; don't move if green is pressed
+	PL_PS	$3E96,read_directions
 	
 	PL_END
+	
+; patch lists for MFM version
 
+	
+pl_main_v2
+	PL_START
+    ; the loading code is completely different, the rest of the game logic is the same
+    ; on both versions (that's good news)
+    PL_NEXT pl_main_common
+    
+    
+read_directions:
+	move.l	joystatus(pc),d4
+	btst	#JPB_BTN_YEL,d4
+	bne.b	.noread
+    MOVEQ.L #$00,D4
+    MOVE.W (A6,$000c),D0
+	rts
+.noread
+    MOVEQ.L #$00,D4
+    MOVE.W #$00,D0
+	rts
+	
 end_of_pause
 	; read PLAY again until it is released
 	movem.l	d0,-(A7)
@@ -312,7 +432,32 @@ read_joy_1:
 	beq.b	.noplay
 	move.b	#$19,GAME_KB_CODE	; P in keyboard
 .noplay
+	btst	#JPB_BTN_YEL,D0
+	beq.b	.nopodcontrol
+	; so it stops the current arrow if arrow is released before
+	; the pods reach the top/bottom/forward/rear max direction
+	move.b	#$00,GAME_KB_CODE
+	btst	#JPB_BTN_UP,d0
+	beq.b	.noup
+	move.b	#$4C,GAME_KB_CODE
+	bra.b	.nopodcontrol
+.noup
+	btst	#JPB_BTN_DOWN,d0
+	beq.b	.nodown
+	move.b	#$4D,GAME_KB_CODE
+	bra.b	.nopodcontrol
+.nodown
+	btst	#JPB_BTN_RIGHT,d0
+	beq.b	.noright
+	move.b	#$4E,GAME_KB_CODE
+	bra.b	.nopodcontrol
+.noright
+	btst	#JPB_BTN_LEFT,d0
+	beq.b	.noleft
+	move.b	#$4F,GAME_KB_CODE
 
+.noleft
+.nopodcontrol	
 	; store status in the end
 	move.l	d0,(a0)
 	movem.l	(a7)+,d0-a0
@@ -329,6 +474,10 @@ test_joy_1_button2
 joystatus:
 	dc.l	0
 	
+_read_joystick_port_1:
+	moveq	#1,D0
+	bra		_read_joystick
+	
 new_game_init:
 	move.b	d1,(A1)	; some game variable
 	movem.l	d0/a0,-(a7)
@@ -339,7 +488,9 @@ new_game_init:
 .noauto
 	; re-run joypad detection so it can be plugged/switched
 	; after each game
-	bsr	_detect_controller_type
+	bsr	_detect_controller_types
+	
+
 	movem.l	(a7)+,d0/A0
 	rts
 	
@@ -354,13 +505,46 @@ empty_vbl:
 	RTE
 	
 PrepIntro
-	DO_ZBASE_PATCH	pl_intro
-	
+	move.l	chipset(pc),d0
+	and.l	#GFXF_AA_LISA|GFXF_AA_ALICE,d0
+	beq.b	.ocs
+	DO_ZBASE_PATCH	pl_intro_aga
 	jmp	$b000
 
+.ocs
+	DO_ZBASE_PATCH	pl_intro
+	jmp	$b000
 
+;0000C3D4 6100 39d8                BSR.W #$39d8 == $0000fdae
+;0000C3D8 303a 4088                MOVE.W (PC,$4088) == $00010462 [0000],D0
+;0000C3DC 6704                     BEQ.B #$04 == $0000c3e2 (F)
+;0000C3DE 6100 3eaa                BSR.W #$3eaa == $0001028a
+
+decrunch:
+	jsr	$FDAE
+	; now try to patch stuff
+
+	movem.l	d0-d1/a0-a2,-(a7)
+	lea	pl_intro_extra(pc),a0
+	move.l	_resload(pc),a2
+	lea	$20000,a1		; base at $20000, allows CD slave to detect that patchlist
+	jsr	resload_Patch(a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+		
+	move.w	$10462,d0		; game completed ?
+	rts
+
+pl_intro_extra
+	PL_START
+;	PL_IFC5
+;	PL_R $2CBE2-$20000	; no menu music
+;	PL_NOP	$6AF0C-$20000,2	; no in-game music
+;	PL_ENDIF
+	PL_END
+	
 pl_intro
 	PL_START
+	PL_PSS	$C3D4,decrunch,2
 	PL_P	$fbd8,_LoadOneSec
 
 	PL_P	$1c094,_LoadOneSec
@@ -373,11 +557,11 @@ pl_intro
 
 	PL_B	$f5d0,$60		;omit step to cyl 0
 
-	PL_W	$f5b2,$4e71		;spin up time
+	PL_NOP	$f5b2,2		;spin up time
 
 	PL_R	$f5e0		;omit headsteps
 
-	PL_W	$f4c0,$4e71		;allowed read time
+	PL_NOP	$f4c0,2		;allowed read time
 
 	PL_L	$f4d0,$42844e75	;return from decode
 
@@ -405,20 +589,25 @@ pl_intro
 	;     by omitting the replaced instructions
 
 	PL_P	$fee0,AckInterrupt
-	PL_W	$fee6,$4e71
+	PL_NOP	$fee6,2
 
 	; *** fix VBL interrupts acknowledge
 
 	PL_P	$6b5ea,PatchEndVBL
 
 						;correct centering of ...
+	
+	PL_B	$1a9b,$17	;change immunity from j+k to j+i
+	PL_END
+	
+pl_intro_aga:
+	PL_START
 	PL_L	$BD80,$23E94		;advantec logo
 	PL_L	$c41a,$fffffffc	;small alnum letters (see hiscore)
 
-	PL_B	$1a9b,$17	;change immunity from j+k to j+i
 					;(worked only on A2000/A4000 Keyboard)
 
-	PL_END
+	PL_NEXT	pl_intro
 
 ;still buggy! -- What bugs? (harry)
 
@@ -565,7 +754,7 @@ KbInt2
 
 	ror.B	#1,D0
 	not.b	D0
-	move.b	D0,$86B7
+	move.b	D0,$86B7		; used by game
 
 	cmp.b	_keyexit(pc),D0
 	beq	_quit
@@ -668,6 +857,8 @@ trused	dc.b	0			;trainer has been used?
 tags
 		dc.l	WHDLTAG_MONITOR_GET
 monitor	dc.l	0
+		dc.l	WHDLTAG_CHIPREVBITS_GET
+chipset dc.l	0
 		dc.l	WHDLTAG_CUSTOM1_GET
 autofire
 		dc.l	0

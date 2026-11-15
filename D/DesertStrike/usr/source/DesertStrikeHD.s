@@ -172,7 +172,7 @@ _config
 		dc.b    "C3:B:Disable Blitter Patches;"
 		dc.b    "C4:B:Enable alternate CD32 Joypad controls;"
 		dc.b    "C5:B:Skip Intro;"
-		dc.b    0
+        dc.b    0
         even
 
 ;======================================================================
@@ -549,10 +549,10 @@ _PL_MAIN	PL_START
 		PL_IFC1X	3
 		PL_B		$d5f4,$60			; Infinite ammo (Hellfire Missiles f7088)
 		PL_ENDIF
+		
 		PL_IFC1X	4
 		PL_W		$e304,$6000			; Infinite Load (cmpi.w #6, blt.w => bra.w)
 		PL_ENDIF
-
 		PL_PS		$9888,_CD32_Read1		; *** CD32 Joypad - Main Screen - Abaddon
 
 		PL_IFC4 					; If not null enable CD32 joypad-style controls
