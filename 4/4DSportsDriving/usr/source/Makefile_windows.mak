@@ -8,6 +8,6 @@ SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE)
+$(WHDLOADER) : $(wildcard *.s *.i)
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)
